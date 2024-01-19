@@ -1,0 +1,9 @@
+Flask
+requests
+selenium
+selenium-wire
+undetected-chromedriver
+pandas
+gunicorn
+webdriver-manager
+uvicorn
