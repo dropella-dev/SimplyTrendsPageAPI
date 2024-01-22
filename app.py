@@ -1,6 +1,6 @@
 import json
 
-from selenium import webdriver
+import undetected_chromedriver as  webdriver
 import re
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -28,14 +28,18 @@ app = Flask(__name__)
 request_queue = queue.Queue()
 def scraper_function(link, result_queue):
     try:
-        options = webdriver.ChromeOptions()
-        # options.add_argument(r'--profile-directory=C:\\Users\\Ahmad\\AppData\\Local\\Google\\Chrome\\User Data\\Profile 3')
         options.add_argument("--disable-renderer-backgrounding")
         options.add_argument("--disable-backgrounding-occluded-windows")
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
-
+        prefs = {"profile.managed_default_content_settings.images": 2}
+        options.add_experimental_option("prefs", prefs)
+        # Limit cache size
+        options.add_argument("--disk-cache-size=1")    
+        options.add_argument("--disable-gpu")   
+        options.add_argument("--prerender-from-omnibox=disabled")    
+        options.add_argument("--disable-software-rasterizer")
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.headless = True
 
@@ -49,8 +53,9 @@ def scraper_function(link, result_queue):
 
         options.add_argument(f"--user-agent={windows_user_agent}")
         options.add_argument("--window-size=1920x1080")
+        options.add_argument('--load-extension=SimplyTrends')
 
-        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        browser = webdriver.Chrome(options=options,version_main=118)
 
 
         cookies_file = 'cookies_simpletrends.json'
