@@ -53,7 +53,7 @@ def scraper_function(link, result_queue):
         scraped_data = {}
 
         options.add_argument(f"--user-agent={windows_user_agent}")
-        options.add_argument("--window-size=1920x1080")
+        options.add_argument("--window-size=1920,1080")
         options.add_argument('--load-extension=SimplyTrends')
 
         browser = webdriver.Chrome(options=options,version_main=118)
