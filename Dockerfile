@@ -1,4 +1,4 @@
-ARG PORT=443
+
 
 
 
@@ -17,4 +17,4 @@ RUN  apt-get update && apt-get install -y python3-pip && pip install -r requirem
 
 COPY . .
 
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:7508", "--workers", "3"]
+CMD ["gunicorn", "app:app"]
