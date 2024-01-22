@@ -28,6 +28,7 @@ app = Flask(__name__)
 request_queue = queue.Queue()
 def scraper_function(link, result_queue):
     try:
+        options = webdriver.ChromeOptions()
         options.add_argument("--disable-renderer-backgrounding")
         options.add_argument("--disable-backgrounding-occluded-windows")
         options.add_argument("--headless")
