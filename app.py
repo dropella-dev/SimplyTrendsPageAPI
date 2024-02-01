@@ -578,7 +578,7 @@ def scraper_function(link, result_queue):
 
 
         except  Exception as e:
-            print(a)
+           
 
             pass
 
@@ -587,7 +587,7 @@ def scraper_function(link, result_queue):
 
 
     except:
-        print(a)
+      
 
 
         browser.quit()
