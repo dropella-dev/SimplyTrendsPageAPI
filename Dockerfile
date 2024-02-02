@@ -1,20 +1,32 @@
 
 
 
+# Start with a more lightweight base image if possible
+FROM python:3.9-slim
 
-FROM cypress/browsers:latest
+# Install only the essential tools and packages needed, and clean up in one layer to keep the image size small
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    wget \
+    gnupg \
+    && wget -qO - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
+# Set the PATH environment variable
+ENV PATH /root/.local/bin:$PATH
 
-RUN apt-get install python3 -y
+# Copy the requirements file and install Python dependencies in one layer
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN echo $(python3 -m site --user-base)
-
-COPY requirements.txt  .
-
-ENV PATH /home/root/.local/bin:${PATH}
-
-RUN  apt-get update && apt-get install -y python3-pip && pip install -r requirements.txt  
-
+# Copy the rest of your application
 COPY . .
+
+# Further instructions to set up your application
+
 
 
