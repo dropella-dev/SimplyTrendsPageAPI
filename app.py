@@ -115,7 +115,7 @@ def scraper_function(link, result_queue):
             response = requests.get(url, headers=headers, params=querystring)
 
 
-            scraped_data['simplyweb'] = response.json()
+            scraped_data['simplyweb'] = response.text
             
             monthlyunites = WebDriverWait(browser, 120).until(
                 EC.presence_of_element_located((By.XPATH,
