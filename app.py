@@ -580,7 +580,7 @@ def scraper_function(link, result_queue):
 
             print(visible_text_tech.text)
             scraped_data['visible_text_tech'] = visible_text_tech.text
-            scraped_data=jsonify(scraped_data)
+            
             
             url = "https://similarweb12.p.rapidapi.com/v2/website-analytics/"
 
@@ -597,7 +597,8 @@ def scraper_function(link, result_queue):
 
 
             #scraped_data['simplyweb'] = response.json
-            scraped_data['simplyweb']=response.json
+            scraped_data['simplyweb']=response.text
+           
 
 
             browser.quit()
@@ -721,7 +722,7 @@ def scrape():
     # Wait for the result
     result = result_queue.get()
 
-    return (result)
+    return jsonify(result)
 
 
 if __name__ == '__main__':
