@@ -37,9 +37,7 @@ def scraper_function(link, result_queue):
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.add_experimental_option("prefs", prefs)
         # Limit cache size
-        options.add_argument("--disk-cache-size=1")
-        options.add_argument("--disable-features=PreloadMediaEngagementData,AutoplayIgnoreWebAudio,MediaEngagementBypassAutoplayPolicies")
-        options.add_argument("--disable-background-timer-throttling")
+        options.add_argument("--disk-cache-size=1")       
 
         options.add_argument("--disable-gpu")   
         options.add_argument("--prerender-from-omnibox=disabled")    
