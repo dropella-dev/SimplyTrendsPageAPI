@@ -63,7 +63,7 @@ def scraper_function(link, result_queue):
         cookies_file = 'cookies_simpletrends.json'
         try:
 
-            browser.get('https://app.simplytrends.co/salestracking/start')
+            browser.get(link)
 
             # cookies = browser.get_cookies()
             # print("Cookies from first site:", cookies)
@@ -89,7 +89,7 @@ def scraper_function(link, result_queue):
             print('done')
 
             # Refresh the page to apply cookies
-            browser.refresh()
+            #browser.refresh()
             # browser.get('https://app.simplytrends.co/shopifystore/barnerbrand.com')
             browser.get(link)
             domain = WebDriverWait(browser, 120).until(
@@ -103,6 +103,19 @@ def scraper_function(link, result_queue):
 
             print(extension)
             scraped_data['domain_name'] = domain.text
+            url = "https://similarweb12.p.rapidapi.com/v2/website-analytics/"
+
+            querystring = {"domain": domain.text}
+
+            headers = {
+                "X-RapidAPI-Key": "2f5b0dee51msh47a4e9364d8b93fp13c2b6jsn52cfc6d849dc",
+                "X-RapidAPI-Host": "similarweb12.p.rapidapi.com"
+            }
+
+            response = requests.get(url, headers=headers, params=querystring)
+
+
+            scraped_data['simplyweb'] = response.json()
             
             monthlyunites = WebDriverWait(browser, 120).until(
                 EC.presence_of_element_located((By.XPATH,
