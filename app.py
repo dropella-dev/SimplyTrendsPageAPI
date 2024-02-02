@@ -534,16 +534,21 @@ def scraper_function(link, result_queue):
                 label_groups = soup.find_all('g', class_='recharts-layer', recursive=False)
 
                 data_malefepercent = []
+                
+                # Extracting the percentages
+                na=['female','male']
                 label_name = ''
                 percentage = ''
                 # Extracting the percentages
+                c=0
                 for group in label_groups:
                     text_element = group.find('text')
                     if text_element:
                         percentage = text_element.get_text(strip=True)
                     path_element = group.find_previous_sibling('path')
-                    if path_element and 'name' in path_element.attrs:
-                        label_name = path_element['name']
+
+                    label_name = na[c]
+                    c+=1
                     data_malefepercent.append({label_name: percentage})
 
                 print(data_malefepercent)
