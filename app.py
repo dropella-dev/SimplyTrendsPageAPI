@@ -102,6 +102,19 @@ def scraper_function(link, result_queue):
 
             print(extension)
             scraped_data['domain_name'] = domain.text
+            url = "https://similarweb12.p.rapidapi.com/v2/website-analytics/"
+
+            querystring = {"domain": domain.text}
+
+            headers = {
+                "X-RapidAPI-Key": "2f5b0dee51msh47a4e9364d8b93fp13c2b6jsn52cfc6d849dc",
+                "X-RapidAPI-Host": "similarweb12.p.rapidapi.com"
+            }
+
+            response = requests.get(url, headers=headers, params=querystring)
+
+
+            scraped_data['simplyweb'] = response.json()
             monthlyunites = WebDriverWait(browser, 120).until(
                 EC.presence_of_element_located((By.XPATH,
                                                 '/html/body/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[2]/div/div/div/div/p')))
