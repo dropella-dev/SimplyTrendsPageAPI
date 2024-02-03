@@ -642,7 +642,7 @@ def scraper_function(link, result_queue):
 
             print(visible_text_tech.text)
             scraped_data['visible_text_tech'] = visible_text_tech.text
-            start_keyword = "Payment processors"
+            start_keyword = "processors"
             end_keyword = "Reviews"
             text=visible_text_tech.text
 
