@@ -711,6 +711,7 @@ def scraper_function(link, result_queue):
             }
 
             response = requests.get(url, headers=headers, params=querystring)
+            print(response.text)
             
             
 
