@@ -145,20 +145,77 @@ def scraper_function(link, result_queue):
                 href = socialmedia.get_attribute('href')
             except:
                 href = "-"
-            print("Extracted URL:", href)
+           
             scraped_data['socialmedia'] = href
             monthstats = WebDriverWait(browser, 120).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > h2 > span > p > div')))
             monthstats = monthstats.text
-            print(monthstats)
+         
             scraped_data['monthstats'] = monthstats
             visible_owerview = WebDriverWait(browser, 120).until(
                 EC.presence_of_element_located((By.XPATH,
                                                 '/html/body/div[1]/div/div[2]/div/div/div')))
 
-            print(visible_owerview.text)
+           
             scraped_data['visible_owerview'] = visible_owerview.text
+
+            start_keyword = "Country rank"
+            end_keyword = "Category rank"
+            text = visible_owerview.text
+
+            # Find start and end positions
+            start_pos = text.find(start_keyword)
+            end_pos = text.find(end_keyword)
+            result = []
+
+            # Check if both keywords are found
+            if start_pos != -1 and end_pos != -1:
+                # Extract the relevant part of the string
+                relevant_part = text[start_pos + len(start_keyword):end_pos].strip()
+
+                # Split the string into a list at every newline and remove empty strings
+                result = [line for line in relevant_part.split('\n') if line]
+          
+            scraped_data['Country_rank'] = result
+            
+            start_keyword = "Category rank"
+            end_keyword = "Global rank"
+            text = visible_owerview.text
+
+            # Find start and end positions
+            start_pos = text.find(start_keyword)
+            end_pos = text.find(end_keyword)
+            result = []
+
+            # Check if both keywords are found
+            if start_pos != -1 and end_pos != -1:
+                # Extract the relevant part of the string
+                relevant_part = text[start_pos + len(start_keyword):end_pos].strip()
+
+                # Split the string into a list at every newline and remove empty strings
+                result = [line for line in relevant_part.split('\n') if line]
+           
+            scraped_data['Category_rank'] = result
+
+            start_keyword = "Global rank"
+            end_keyword = "Social media"
+            text = visible_owerview.text
+
+            # Find start and end positions
+            start_pos = text.find(start_keyword)
+            end_pos = text.find(end_keyword)
+            result = []
+
+            # Check if both keywords are found
+            if start_pos != -1 and end_pos != -1:
+                # Extract the relevant part of the string
+                relevant_part = text[start_pos + len(start_keyword):end_pos].strip()
+
+                # Split the string into a list at every newline and remove empty strings
+                result = [line for line in relevant_part.split('\n') if line]
+           
+            scraped_data['Global_rank'] = result
             language = WebDriverWait(browser, 120).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(2) > div > div > div > div > p')))
