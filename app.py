@@ -724,7 +724,7 @@ def scraper_function(link, result_queue):
 
 
         except  Exception as e:
-           
+            print(e)
 
             pass
 
