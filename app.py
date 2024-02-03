@@ -103,6 +103,11 @@ def scraper_function(link, result_queue):
 
             print(extension)
             scraped_data['domain_name'] = domain.text
+            icon = WebDriverWait(browser, 120).until(
+                EC.presence_of_element_located((By.XPATH,
+                                                '/html/body/div[1]/header/div[2]/div[2]/div/div/div/div/div[1]/div/img')))
+            icon=icon.get_attribute('src')
+            scraped_data['icon'] = icon
             
             
             monthlyunites = WebDriverWait(browser, 120).until(
@@ -404,7 +409,7 @@ def scraper_function(link, result_queue):
                 # num_products = vendor.find_next_sibling('div', class_='css-18jpfvm').find('p').get_text(strip=True)
                 num_products_div = vendor.parent.find_next_sibling('div', class_='css-18jpfvm')
                 num_products = num_products_div.find('p').get_text(
-                    strip=True) if num_products_div else 'Unknown'
+                    strip=True) if num_products_div else 'Others'
 
                 # Append the data to the list
                 data_producttyps.append({'Product_type': vendor_name, 'Distribution': distribution,
@@ -580,6 +585,63 @@ def scraper_function(link, result_queue):
 
             print(visible_text_tech.text)
             scraped_data['visible_text_tech'] = visible_text_tech.text
+            start_keyword = "Payment processors"
+            end_keyword = "Reviews"
+            text=visible_text_tech.text
+
+            # Find start and end positions
+            start_pos = text.find(start_keyword)
+            end_pos = text.find(end_keyword)
+            result=[]
+
+            # Check if both keywords are found
+            if start_pos != -1 and end_pos != -1:
+                # Extract the relevant part of the string
+                relevant_part = text[start_pos + len(start_keyword):end_pos].strip()
+
+                # Split the string into a list at every newline and remove empty strings
+                result = [line for line in relevant_part.split('\n') if line]
+            print(result)
+            scraped_data['payment_methods'] = result
+
+            start_keyword = "Top 5 popular categories"
+            end_keyword = "Top 5 hot topic"
+            text = visible_traffic.text
+
+            # Find start and end positions
+            start_pos = text.find(start_keyword)
+            end_pos = text.find(end_keyword)
+            result = []
+
+            # Check if both keywords are found
+            if start_pos != -1 and end_pos != -1:
+                # Extract the relevant part of the string
+                relevant_part = text[start_pos + len(start_keyword):end_pos].strip()
+
+                # Split the string into a list at every newline and remove empty strings
+                result = [line for line in relevant_part.split('\n') if line]
+            print(result)
+            scraped_data['Top_5_popular_categories'] = result
+
+            start_keyword = "Top 5 hot topic"
+            end_keyword = "Other sites surveyed"
+            text = visible_traffic.text
+
+            # Find start and end positions
+            start_pos = text.find(start_keyword)
+            end_pos = text.find(end_keyword)
+            result = []
+
+            # Check if both keywords are found
+            if start_pos != -1 and end_pos != -1:
+                # Extract the relevant part of the string
+                relevant_part = text[start_pos + len(start_keyword):end_pos].strip()
+
+                # Split the string into a list at every newline and remove empty strings
+                result = [line for line in relevant_part.split('\n') if line]
+            print(result)
+            scraped_data['Top_5_hot_topic'] = result
+
             
             
             url = "https://similarweb12.p.rapidapi.com/v2/website-analytics/"
