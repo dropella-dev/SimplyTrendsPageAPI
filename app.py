@@ -162,11 +162,11 @@ def scraper_function(link, result_queue):
 
             start_keyword = "Country rank"
             end_keyword = "Category rank"
-            text = visible_owerview.text
+            text =  scraped_data['visible_owerview']
 
             # Find start and end positions
             start_pos = text.find(start_keyword)
-            end_pos = text.find(end_keyword)
+            end_pos = text.find(end_keyword, start_pos + len(start_keyword))
             result = []
 
             # Check if both keywords are found
@@ -181,11 +181,11 @@ def scraper_function(link, result_queue):
             
             start_keyword = "Category rank"
             end_keyword = "Global rank"
-            text = visible_owerview.text
+            text =  scraped_data['visible_owerview']
 
             # Find start and end positions
             start_pos = text.find(start_keyword)
-            end_pos = text.find(end_keyword)
+            end_pos =text.find(end_keyword, start_pos + len(start_keyword))
             result = []
 
             # Check if both keywords are found
@@ -200,11 +200,11 @@ def scraper_function(link, result_queue):
 
             start_keyword = "Global rank"
             end_keyword = "Social media"
-            text = visible_owerview.text
+            text =  scraped_data['visible_owerview']
 
             # Find start and end positions
             start_pos = text.find(start_keyword)
-            end_pos = text.find(end_keyword)
+            end_pos = text.find(end_keyword, start_pos + len(start_keyword))
             result = []
 
             # Check if both keywords are found
@@ -644,11 +644,11 @@ def scraper_function(link, result_queue):
             scraped_data['visible_text_tech'] = visible_text_tech.text
             start_keyword = "processors"
             end_keyword = "Reviews"
-            text=visible_text_tech.text
+            text= scraped_data['visible_text_tech']
 
             # Find start and end positions
             start_pos = text.find(start_keyword)
-            end_pos = text.find(end_keyword)
+            end_pos = text.find(end_keyword, start_pos + len(start_keyword))
             result=[]
 
             # Check if both keywords are found
@@ -663,11 +663,11 @@ def scraper_function(link, result_queue):
 
             start_keyword = "Top 5 popular categories"
             end_keyword = "Top 5 hot topic"
-            text = visible_traffic.text
+            text =  scraped_data['visible_text_tech']
 
             # Find start and end positions
             start_pos = text.find(start_keyword)
-            end_pos = text.find(end_keyword)
+            end_pos = text.find(end_keyword, start_pos + len(start_keyword))
             result = []
 
             # Check if both keywords are found
@@ -682,11 +682,11 @@ def scraper_function(link, result_queue):
 
             start_keyword = "Top 5 hot topic"
             end_keyword = "Other sites surveyed"
-            text = visible_traffic.text
+            text =  scraped_data['visible_text_tech']
 
             # Find start and end positions
             start_pos = text.find(start_keyword)
-            end_pos = text.find(end_keyword)
+            end_pos = text.find(end_keyword, start_pos + len(start_keyword))
             result = []
 
             # Check if both keywords are found
