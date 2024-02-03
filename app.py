@@ -717,7 +717,12 @@ def scraper_function(link, result_queue):
 
 
             #scraped_data['simplyweb'] = response.json
-            scraped_data['simplyweb']=response.text
+            if(response.text):
+                print('ok')
+                scraped_data['simplyweb']=response.text
+            else:
+                scraped_data['simplyweb']='nothign'
+            
            
 
 
