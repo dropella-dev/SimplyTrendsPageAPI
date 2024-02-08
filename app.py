@@ -710,18 +710,18 @@ def scraper_function(link, result_queue):
                 "X-RapidAPI-Host": "similarweb12.p.rapidapi.com"
             }
 
-            response = requests.get(url, headers=headers, params=querystring)
-            print(response.text)
+           # response = requests.get(url, headers=headers, params=querystring)
+           # print(response.text)
             
             
 
 
             #scraped_data['simplyweb'] = response.json
-            if(response.text):
-                print('ok')
-                scraped_data['simplyweb']=response.text
-            else:
-                scraped_data['simplyweb']='nothign'
+           # if(response.text):
+             #   print('ok')
+             #   scraped_data['simplyweb']=response.text
+            #else:
+               # scraped_data['simplyweb']='nothign'
             
            
 
