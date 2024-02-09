@@ -365,6 +365,7 @@ def scraper_function(link, result_queue):
             vendor_divs = soup.find_all('div', class_='css-1dogkm')
 
             # Loop through the vendor divs to extract the data
+            c=0
             for vendor in vendor_divs:
                 # Extract the vendor name
                 distribution_span = vendor.find('a', class_='css-1xa0emq')
@@ -404,6 +405,9 @@ def scraper_function(link, result_queue):
                 # Append the data to the list
                 data_producttags.append({'Product_tag': vendor_name, 'Distribution': distribution,
                                          'Number of products': num_products})
+                c+=1
+                if(c>5):
+                    break
 
             # Create a DataFrame
 
