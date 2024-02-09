@@ -1,4 +1,6 @@
 import json
+import os
+
 
 import undetected_chromedriver as  webdriver
 import re
@@ -727,10 +729,14 @@ def scraper_function(link, result_queue):
 
 
             browser.quit()
+            try:
+             os.system("pkill chromedriver")
+            except:
+                pass
 
 
         except  Exception as e:
-            print(e)
+           
 
             pass
 
