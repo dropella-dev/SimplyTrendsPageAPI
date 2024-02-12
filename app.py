@@ -110,6 +110,22 @@ def scraper_function(link, result_queue):
                                                 '/html/body/div[1]/header/div[2]/div[2]/div/div/div/div/div[1]/div/img')))
             icon=icon.get_attribute('src')
             scraped_data['icon'] = icon
+
+            storename = WebDriverWait(browser, 10).until(
+                EC.presence_of_element_located((By.XPATH,
+                                                '/html/body/div[1]/div/div[2]/div/div/div/div/div[3]/div/div/p[1]')))
+            storename = storename.text
+            print(storename)
+            scraped_data['storename'] = storename
+            try:
+                categoryyrank = WebDriverWait(browser, 1).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR,
+                                                    '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(5) > div > div > div > div > p')))
+                categoryyrank = categoryyrank.text
+            except:
+                categoryyrank = "-"
+            print(categoryyrank)
+            scraped_data['categoryyrank'] = categoryyrank
             
             
             monthlyunites = WebDriverWait(browser, 10).until(
@@ -140,15 +156,24 @@ def scraper_function(link, result_queue):
                 countryrank = "-"
             print(countryrank)
             scraped_data['countryrank'] = countryrank
-            try:
+                        try:
                 socialmedia = WebDriverWait(browser, 1).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                    '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.css-1t62lt9 > span > a')))
-                href = socialmedia.get_attribute('href')
+                    EC.presence_of_element_located((By.XPATH,
+                                                    '//*[@id="__next"]/div/div[2]/div/div/div/div/div[3]/div/div/div[2]')))
+                links = socialmedia.find_elements(By.TAG_NAME, 'a')
+
+                # Initialize an empty list to store href values
+                hrefs = []
+
+                # Iterate through found links and get the 'href' attribute
+                for link in links:
+                    href = link.get_attribute('href')
+                    if href:  # Ensure href is not None
+                        hrefs.append(href)
             except:
                 href = "-"
-           
-            scraped_data['socialmedia'] = href
+            print("Extracted URL:", hrefs)
+            scraped_data['socialmedia'] = hrefs
             monthstats = WebDriverWait(browser, 10).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > h2 > span > p > div')))
