@@ -156,7 +156,7 @@ def scraper_function(link, result_queue):
                 countryrank = "-"
             print(countryrank)
             scraped_data['countryrank'] = countryrank
-                        try:
+            try:
                 socialmedia = WebDriverWait(browser, 1).until(
                     EC.presence_of_element_located((By.XPATH,
                                                     '//*[@id="__next"]/div/div[2]/div/div/div/div/div[3]/div/div/div[2]')))
