@@ -19,7 +19,17 @@ RUN apt-get update && \
 
 
 # Set the PATH environment variable
-RUN chmod +x /chromedriver
+WORKDIR /app
+
+# Install Chrome and any other dependencies you need
+RUN apt-get update && apt-get install -y wget unzip
+RUN wget https://storage.googleapis.com/chrome-for-testing-public/121.0.6167.184/linux64/chromedriver-linux64.zip
+RUN unzip chromedriver-linux64.zip -d /usr/local/bin/
+RUN chmod +x /usr/local/bin/chromedriver
+
+# Clean up
+RUN rm chromedriver-linux64.zip
+
 
 ENV PATH /root/.local/bin:$PATH
 
