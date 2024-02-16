@@ -20,7 +20,7 @@ import pandas as pd
 from flask import Flask, request, jsonify
 import threading
 import queue
-from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 app = Flask(__name__)
 
