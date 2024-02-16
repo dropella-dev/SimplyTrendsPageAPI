@@ -28,6 +28,21 @@ app = Flask(__name__)
 
 # Queue to handle requests
 request_queue = queue.Queue()
+import psutil
+import os
+def memory_limiter(max_memory, check_interval=1):
+    """
+    Continuously check the memory usage of the current process and
+    kill it if it exceeds max_memory (in megabytes).
+    """
+    process = psutil.Process(os.getpid())
+    while True:
+        mem = process.memory_info().rss / (1024 * 1024)  # Memory usage in MB
+        if mem > max_memory:
+            process.kill()
+        time.sleep(check_interval)
+
+@timeout_decorator.timeout(300)
 def scraper_function(link, result_queue):
     try:
         options = webdriver.ChromeOptions()
@@ -876,9 +891,11 @@ def scrape():
     result_queue = queue.Queue()
 
     # Start a new thread for each scraping request
+    memory_thread = threading.Thread(target=memory_limiter, args=(1024,), daemon=True)
+    memory_thread.start()
     thread = threading.Thread(target=scraper_function, args=(link, result_queue))
     thread.start()
-
+    thread.join()
     # Wait for the result
     result = result_queue.get()
 
