@@ -4,7 +4,7 @@
 # Start with a more lightweight base image if possible
 FROM python:3.9-slim
 
-# Install only the essential tools and packages needed, and clean up in one layer to keep the image size small
+ # Install Google Chrome Stable specific version
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     wget \
@@ -12,7 +12,7 @@ RUN apt-get update && \
     && wget -qO - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
     && apt-get update \
-    && apt-get install -y google-chrome-stable=114.0.1234.567-1 \ # Specify the version here
+    && apt-get install -y google-chrome-stable=114.0.1234.567-1 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
