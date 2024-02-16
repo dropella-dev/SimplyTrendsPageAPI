@@ -8,4 +8,4 @@ gunicorn
 webdriver-manager
 uvicorn
 bs4
-
+psutil
