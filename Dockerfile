@@ -20,6 +20,7 @@ RUN apt-get update && \
 
 # Set the PATH environment variable
 ENV PATH /root/.local/bin:$PATH
+RUN chmod +x /chromedriver
 
 # Copy the requirements file and install Python dependencies in one layer
 COPY requirements.txt .
