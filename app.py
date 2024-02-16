@@ -1,6 +1,5 @@
 import json
 import os
-import timeout_decorator
 import undetected_chromedriver as  webdriver
 import re
 from selenium.webdriver.common.by import By
@@ -41,7 +40,7 @@ def memory_limiter(max_memory, check_interval=1):
             process.kill()
         time.sleep(check_interval)
 
-@timeout_decorator.timeout(300)
+
 def scraper_function(link, result_queue):
     try:
         options = webdriver.ChromeOptions()
