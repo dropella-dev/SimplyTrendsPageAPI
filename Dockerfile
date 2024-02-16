@@ -19,7 +19,6 @@ RUN apt-get update && \
 
 
 
-RUN chmod +x /chromedriver
 
 
 
@@ -34,6 +33,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of your application
 COPY . .
+RUN chmod +x /app/chromedriver
 
 # Further instructions to set up your application
 
