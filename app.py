@@ -891,13 +891,16 @@ def scrape():
     result_queue = queue.Queue()
 
     # Start a new thread for each scraping request
-    memory_thread = threading.Thread(target=memory_limiter, args=(1024,), daemon=True)
-    memory_thread.start()
-    thread = threading.Thread(target=scraper_function, args=(link, result_queue))
-    thread.start()
-    thread.join()
+    try:
+     memory_thread = threading.Thread(target=memory_limiter, args=(1024,), daemon=True)
+     memory_thread.start()
+     thread = threading.Thread(target=scraper_function, args=(link, result_queue))
+     thread.start()
+     thread.join()
     # Wait for the result
-    result = result_queue.get()
+     result = result_queue.get()
+    except: 
+        return 'again'
 
     return jsonify(result)
 
