@@ -40,9 +40,28 @@ def memory_limiter(max_memory, check_interval=1):
             process.kill()
         time.sleep(check_interval)
 
-
+def ensure_chromedriver():
+    # Check if chromedriver exists in the current directory
+    chromedriver_path = os.path.join(os.getcwd(), 'chromedriver')
+    if not os.path.exists(chromedriver_path):
+        # If not found, use webdriver_manager to download/install it
+        chromedriver_path = ChromeDriverManager().install()
+    else:
+        # If found, check version compatibility
+        installed_chrome_version = subprocess.run(['google-chrome', '--version'], capture_output=True, text=True).stdout.strip().split()[-1].split('.')[0]
+        chromedriver_version = subprocess.run([chromedriver_path, '--version'], capture_output=True, text=True).stdout.strip().split()[1].split('.')[0]
+        
+        # If major version mismatch, re-download matching chromedriver
+        if installed_chrome_version != chromedriver_version:
+            chromedriver_path = ChromeDriverManager().install()
+    
+    return chromedriver_path
 def scraper_function(link, result_queue):
-    try:
+    try:  
+
+        chromedriver_path = ensure_chromedriver()
+        options = webdriver.ChromeOptions()
+        service = ChromeService(executable_path=chromedriver_path)
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-renderer-backgrounding")
         options.add_argument("--disable-backgrounding-occluded-windows")
@@ -72,7 +91,7 @@ def scraper_function(link, result_queue):
         options.add_argument("--window-size=1920,1080")
         options.add_argument('--load-extension=SimplyTrends')
 
-        browser = webdriver.Chrome(executable_path='/chromedriver',options=options)
+        browser = webdriver.Chrome(service=service,options=options)
 
 
         cookies_file = 'cookies_simpletrends.json'
