@@ -152,7 +152,7 @@ def scraper_function(link, result_queue):
                                                 '/html/body/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[2]/div/div/div/div/p')))
              monthlyunites = monthlyunites.text
             except:
-                monthlyunites=''
+                monthlyunites='-'
             print(monthlyunites)
             scraped_data['monthlyunites'] = monthlyunites
 
@@ -162,7 +162,7 @@ def scraper_function(link, result_queue):
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[1]/div/div/div/div/p')))
                 monthlyrevenue = monthlyrevenue.text
             except Exception as e:
-                monthlyrevenue = ''
+                monthlyrevenue = '-'
             print(monthlyrevenue)
             scraped_data['monthlyrevenue'] = monthlyrevenue
 
@@ -172,7 +172,7 @@ def scraper_function(link, result_queue):
                         (By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[3]/div/div/p[1]')))
                 storename = storename.text
             except Exception as e:
-                storename = ''
+                storename = '-'
             print(storename)
             scraped_data['storename'] = storename
             try:
@@ -191,7 +191,7 @@ def scraper_function(link, result_queue):
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(1) > div > div > div > div > p > div > span')))
                 country = country.text
             except Exception as e:
-                country = ''
+                country = '-'
             print(country)
             scraped_data['country'] = country
 
@@ -228,7 +228,7 @@ def scraper_function(link, result_queue):
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > h2 > span > p > div')))
                 monthstats = monthstats.text
             except Exception as e:
-                monthstats = ''
+                monthstats = '-'
             print(monthstats)
             scraped_data['monthstats'] = monthstats
             try:
@@ -236,7 +236,7 @@ def scraper_function(link, result_queue):
                 EC.presence_of_element_located((By.XPATH,
                                                 '/html/body/div[1]/div/div[2]/div/div/div')))
             except:
-                visible_owerview=''
+                visible_owerview='-'
 
             print(visible_owerview.text)
             scraped_data['visible_owerview'] = visible_owerview.text
@@ -258,8 +258,8 @@ def scraper_function(link, result_queue):
                 # Split the string into a list at every newline and remove empty strings
                 result = [line for line in relevant_part.split('\n') if line]
             print(result)
-            if(visible_owerview==''):
-                scraped_data['Country_rank'] = ''
+            if(visible_owerview=='-'):
+                scraped_data['Country_rank'] = '-'
             else:
              scraped_data['Country_rank'] = result
 
@@ -280,8 +280,8 @@ def scraper_function(link, result_queue):
                 # Split the string into a list at every newline and remove empty strings
                 result = [line for line in relevant_part.split('\n') if line]
             print(result)
-            if (visible_owerview == ''):
-                scraped_data['Category_rank'] = ''
+            if (visible_owerview == '-'):
+                scraped_data['Category_rank'] = '-'
             else:
                 scraped_data['Category_rank'] = result
 
@@ -303,8 +303,8 @@ def scraper_function(link, result_queue):
                 # Split the string into a list at every newline and remove empty strings
                 result = [line for line in relevant_part.split('\n') if line]
             print(result)
-            if (visible_owerview == ''):
-                scraped_data['Global_rank'] = ''
+            if (visible_owerview == '-'):
+                scraped_data['Global_rank'] = '-'
             else:
                 scraped_data['Global_rank'] = result
 
@@ -314,7 +314,7 @@ def scraper_function(link, result_queue):
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(2) > div > div > div > div > p')))
                 language = language.text
             except Exception as e:
-                language = ''
+                language = '-'
             print(language)
             scraped_data['language'] = language
 
@@ -324,7 +324,7 @@ def scraper_function(link, result_queue):
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(3) > div > div > div > div > p')))
                 currency = currency.text
             except Exception as e:
-                currency = ''
+                currency = '-'
             print(currency)
             scraped_data['currency'] = currency
 
@@ -334,7 +334,7 @@ def scraper_function(link, result_queue):
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > div:nth-child(3) > div:nth-child(1) > div > div > div > div > p')))
                 firstpublishproduct = firstpublishproduct.text
             except Exception as e:
-                firstpublishproduct = ''
+                firstpublishproduct = '-'
             print(firstpublishproduct)
             scraped_data['firstpublishproduct'] = firstpublishproduct
 
@@ -344,7 +344,7 @@ def scraper_function(link, result_queue):
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > div:nth-child(3) > div:nth-child(2) > div > div > div > div > p')))
                 lastpublishproduct = lastpublishproduct.text
             except Exception as e:
-                lastpublishproduct = ''
+                lastpublishproduct = '-'
             print(lastpublishproduct)
             scraped_data['lastpublishproduct'] = lastpublishproduct
 
@@ -354,7 +354,7 @@ def scraper_function(link, result_queue):
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > div:nth-child(3) > div:nth-child(3) > div > div > div > div > p')))
                 numproducts = numproducts.text
             except Exception as e:
-                numproducts = ''
+                numproducts = '-'
             print(numproducts)
             scraped_data['numproducts'] = numproducts
 
@@ -364,7 +364,7 @@ def scraper_function(link, result_queue):
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[1]/div[4]/div/div/div/div/p')))
                 avgprices = avgprices.text
             except Exception as e:
-                avgprices = ''
+                avgprices = '-'
             print(avgprices)
             scraped_data['avgprices'] = avgprices
 
@@ -374,7 +374,7 @@ def scraper_function(link, result_queue):
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[1]/div[5]/div/div/div/div/p')))
                 highestproductprice = highestproductprice.text
             except Exception as e:
-                highestproductprice = ''
+                highestproductprice = '-'
             print(highestproductprice)
             scraped_data['highestproductprice'] = highestproductprice
 
@@ -384,7 +384,7 @@ def scraper_function(link, result_queue):
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[1]/div[6]/div/div/div/div/p')))
                 lowestproductprice = lowestproductprice.text
             except Exception as e:
-                lowestproductprice = ''
+                lowestproductprice = '-'
             print(lowestproductprice)
             scraped_data['lowestproductprice'] = lowestproductprice
 
@@ -633,7 +633,7 @@ def scraper_function(link, result_queue):
                                                         '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div > div > div > div:nth-child(1) > div > div:nth-child(1) > div > div > div > div > p.MuiTypography-root.MuiTypography-h6.css-1krdksj')))
                     monthlyvisits = monthlyvisits.text
                 except Exception as e:
-                    monthlyvisits = ''
+                    monthlyvisits = '-'
                 print(monthlyvisits)
                 scraped_data['monthlyvisits'] = monthlyvisits
 
@@ -643,7 +643,7 @@ def scraper_function(link, result_queue):
                                                         '/html/body/div[1]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div/p')))
                     avgvisitduration = avgvisitduration.text
                 except Exception as e:
-                    avgvisitduration = ''
+                    avgvisitduration = '-'
                 print(avgvisitduration)
                 scraped_data['avgvisitduration'] = avgvisitduration
 
@@ -653,7 +653,7 @@ def scraper_function(link, result_queue):
                                                         '/html/body/div[1]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div[3]/div/div/div/div/p')))
                     pagespervisit = pagespervisit.text
                 except Exception as e:
-                    pagespervisit = ''
+                    pagespervisit = '-'
                 print(pagespervisit)
                 scraped_data['pagespervisit'] = pagespervisit
 
@@ -663,7 +663,7 @@ def scraper_function(link, result_queue):
                                                         '/html/body/div[1]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div[4]/div/div/div/div/p')))
                     bouncertate = bouncertate.text
                 except Exception as e:
-                    bouncertate = ''
+                    bouncertate = '-'
                 print(bouncertate)
                 scraped_data['bouncertate'] = bouncertate
 
