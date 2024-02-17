@@ -130,7 +130,7 @@ def scraper_function(link, result_queue):
             #browser.refresh()
             # browser.get('https://app.simplytrends.co/shopifystore/barnerbrand.com')
             browser.get(link)
-            domain = WebDriverWait(browser, 10).until(
+            domain = WebDriverWait(browser, 2).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '#appBarContainer > div > div > p > p > a.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-1xa0emq > p')))
             domain_name = domain.text
@@ -141,7 +141,7 @@ def scraper_function(link, result_queue):
 
             print(extension)
             scraped_data['domain_name'] = domain.text
-            icon = WebDriverWait(browser, 10).until(
+            icon = WebDriverWait(browser, 2).until(
                 EC.presence_of_element_located((By.XPATH,
                                                 '/html/body/div[1]/header/div[2]/div[2]/div/div/div/div/div[1]/div/img')))
             icon=icon.get_attribute('src')
@@ -157,7 +157,7 @@ def scraper_function(link, result_queue):
             scraped_data['monthlyunites'] = monthlyunites
 
             try:
-                monthlyrevenue = WebDriverWait(browser, 10).until(
+                monthlyrevenue = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.XPATH,
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[1]/div/div/div/div/p')))
                 monthlyrevenue = monthlyrevenue.text
@@ -167,7 +167,7 @@ def scraper_function(link, result_queue):
             scraped_data['monthlyrevenue'] = monthlyrevenue
 
             try:
-                storename = WebDriverWait(browser, 10).until(
+                storename = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located(
                         (By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[3]/div/div/p[1]')))
                 storename = storename.text
@@ -186,7 +186,7 @@ def scraper_function(link, result_queue):
             scraped_data['categoryyrank'] = categoryyrank
 
             try:
-                country = WebDriverWait(browser, 10).until(
+                country = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR,
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(1) > div > div > div > div > p > div > span')))
                 country = country.text
@@ -223,7 +223,7 @@ def scraper_function(link, result_queue):
             print("Extracted URL:", hrefs)
             scraped_data['socialmedia'] = hrefs
             try:
-                monthstats = WebDriverWait(browser, 10).until(
+                monthstats = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR,
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > h2 > span > p > div')))
                 monthstats = monthstats.text
@@ -232,7 +232,7 @@ def scraper_function(link, result_queue):
             print(monthstats)
             scraped_data['monthstats'] = monthstats
             try:
-             visible_owerview = WebDriverWait(browser, 10).until(
+             visible_owerview = WebDriverWait(browser, 2).until(
                 EC.presence_of_element_located((By.XPATH,
                                                 '/html/body/div[1]/div/div[2]/div/div/div')))
             except:
@@ -309,7 +309,7 @@ def scraper_function(link, result_queue):
                 scraped_data['Global_rank'] = result
 
             try:
-                language = WebDriverWait(browser, 10).until(
+                language = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR,
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(2) > div > div > div > div > p')))
                 language = language.text
@@ -319,7 +319,7 @@ def scraper_function(link, result_queue):
             scraped_data['language'] = language
 
             try:
-                currency = WebDriverWait(browser, 10).until(
+                currency = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR,
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(3) > div > div > div > div > p')))
                 currency = currency.text
@@ -329,7 +329,7 @@ def scraper_function(link, result_queue):
             scraped_data['currency'] = currency
 
             try:
-                firstpublishproduct = WebDriverWait(browser, 10).until(
+                firstpublishproduct = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR,
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > div:nth-child(3) > div:nth-child(1) > div > div > div > div > p')))
                 firstpublishproduct = firstpublishproduct.text
@@ -339,7 +339,7 @@ def scraper_function(link, result_queue):
             scraped_data['firstpublishproduct'] = firstpublishproduct
 
             try:
-                lastpublishproduct = WebDriverWait(browser, 10).until(
+                lastpublishproduct = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR,
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > div:nth-child(3) > div:nth-child(2) > div > div > div > div > p')))
                 lastpublishproduct = lastpublishproduct.text
@@ -349,7 +349,7 @@ def scraper_function(link, result_queue):
             scraped_data['lastpublishproduct'] = lastpublishproduct
 
             try:
-                numproducts = WebDriverWait(browser, 10).until(
+                numproducts = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.CSS_SELECTOR,
                                                     '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > div:nth-child(3) > div:nth-child(3) > div > div > div > div > p')))
                 numproducts = numproducts.text
@@ -359,7 +359,7 @@ def scraper_function(link, result_queue):
             scraped_data['numproducts'] = numproducts
 
             try:
-                avgprices = WebDriverWait(browser, 10).until(
+                avgprices = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.XPATH,
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[1]/div[4]/div/div/div/div/p')))
                 avgprices = avgprices.text
@@ -369,7 +369,7 @@ def scraper_function(link, result_queue):
             scraped_data['avgprices'] = avgprices
 
             try:
-                highestproductprice = WebDriverWait(browser, 10).until(
+                highestproductprice = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.XPATH,
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[1]/div[5]/div/div/div/div/p')))
                 highestproductprice = highestproductprice.text
@@ -379,7 +379,7 @@ def scraper_function(link, result_queue):
             scraped_data['highestproductprice'] = highestproductprice
 
             try:
-                lowestproductprice = WebDriverWait(browser, 10).until(
+                lowestproductprice = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.XPATH,
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[1]/div[6]/div/div/div/div/p')))
                 lowestproductprice = lowestproductprice.text
@@ -392,7 +392,7 @@ def scraper_function(link, result_queue):
                 ch = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.XPATH,
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[2]/div[3]/div/div/div/div/div[8]/p'))).click()
-                ch = WebDriverWait(browser, 10).until(
+                ch = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.XPATH,
                                                     '/html/body/div[3]/div[3]/div/div')))
             except:
@@ -472,7 +472,7 @@ def scraper_function(link, result_queue):
                                                  '/html/body/div[3]/div[3]/div/div/div')))
             except:
 
-                click = WebDriverWait(browser, 10).until(
+                click = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.XPATH,
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[2]/div[5]/div/div/div')))
                 pass
@@ -553,11 +553,11 @@ def scraper_function(link, result_queue):
                 click = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.XPATH,
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[2]/div[5]/div/div/div/div/div/div[8]/p'))).click()
-                click = WebDriverWait(browser, 10).until(
+                click = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.XPATH,
                                                     '/html/body/div[3]/div[3]/div/div/div')))
             except:
-                click = WebDriverWait(browser, 10).until(
+                click = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.XPATH,
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[2]/div[6]/div/div/div')))
                 pass
@@ -617,10 +617,10 @@ def scraper_function(link, result_queue):
             except:
                 pass
 
-            click = WebDriverWait(browser, 10).until(
+            click = WebDriverWait(browser, 2).until(
                 EC.presence_of_element_located((By.XPATH,
                                                 '/html/body/div[1]/header/div[2]/div[2]/div/div/div/nav/div/div/div/div[1]/button[3]'))).click()
-            visible_traffic = WebDriverWait(browser, 10).until(
+            visible_traffic = WebDriverWait(browser, 2).until(
                 EC.presence_of_element_located((By.XPATH,
                                                 '/html/body/div[1]/div/div[2]/div/div/div/div/div/div')))
 
@@ -638,7 +638,7 @@ def scraper_function(link, result_queue):
                 scraped_data['monthlyvisits'] = monthlyvisits
 
                 try:
-                    avgvisitduration = WebDriverWait(browser, 10).until(
+                    avgvisitduration = WebDriverWait(browser, 2).until(
                         EC.presence_of_element_located((By.XPATH,
                                                         '/html/body/div[1]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div/p')))
                     avgvisitduration = avgvisitduration.text
@@ -648,7 +648,7 @@ def scraper_function(link, result_queue):
                 scraped_data['avgvisitduration'] = avgvisitduration
 
                 try:
-                    pagespervisit = WebDriverWait(browser, 10).until(
+                    pagespervisit = WebDriverWait(browser, 2).until(
                         EC.presence_of_element_located((By.XPATH,
                                                         '/html/body/div[1]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div[3]/div/div/div/div/p')))
                     pagespervisit = pagespervisit.text
@@ -658,7 +658,7 @@ def scraper_function(link, result_queue):
                 scraped_data['pagespervisit'] = pagespervisit
 
                 try:
-                    bouncertate = WebDriverWait(browser, 10).until(
+                    bouncertate = WebDriverWait(browser, 2).until(
                         EC.presence_of_element_located((By.XPATH,
                                                         '/html/body/div[1]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div[4]/div/div/div/div/p')))
                     bouncertate = bouncertate.text
@@ -781,7 +781,7 @@ def scraper_function(link, result_queue):
                 EC.presence_of_element_located((By.XPATH,
                                                 '/html/body/div[1]/header/div[2]/div[2]/div/div/div/nav/div/div/div/div[1]/button[4]'))).click()
             time.sleep(1)
-            visible_text_tech = WebDriverWait(browser, 10).until(
+            visible_text_tech = WebDriverWait(browser, 2).until(
                 EC.presence_of_element_located((By.XPATH,
                                                 '/html/body/div[1]/div/div[2]')))
 
