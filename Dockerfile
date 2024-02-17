@@ -3,7 +3,7 @@
 
 # Start with a more lightweight base image if possible
 FROM python:3.9-slim
-
+WORKDIR /app
 # Install Google Chrome Stable specific version
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
