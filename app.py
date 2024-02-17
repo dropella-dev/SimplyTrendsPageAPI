@@ -61,7 +61,12 @@ def scraper_function(link, result_queue):
     try:  
 
         #chromedriver_path = ensure_chromedriver()
+        chrome_binary_path = os.getenv('CHROME_BINARY_PATH', '/opt/chrome/chrome')  # Provide a default in case the env var is not set
+
+
+        
         options = webdriver.ChromeOptions()
+        options.binary_location = chrome_binary_path
         service = ChromeService(executable_path="/app/chromedriver")
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-renderer-backgrounding")
