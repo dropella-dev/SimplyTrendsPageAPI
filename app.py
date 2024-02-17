@@ -855,7 +855,7 @@ def scraper_function(link, result_queue):
              os.system("pkill chromedriver")
             except:
                 pass
-
+            result_queue.put(scraped_data)
 
         except  Exception as e:
             print(a)
@@ -875,7 +875,7 @@ def scraper_function(link, result_queue):
         browser.quit()
         print('exception')
 
-    result_queue.put(scraped_data)
+    
 def convertTuple(tup):
 
     strc = ''
