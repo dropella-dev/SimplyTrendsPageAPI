@@ -978,7 +978,7 @@ def scrape():
      
     # Wait for the result
      try:
-      result = result_queue.get(timeout=40)  # Adjust timeout as necessary
+      result = result_queue.get(timeout=60)  # Adjust timeout as necessary
      except queue.Empty:
       # Handle the case where no result is produced within the timeout period
       print("Failed to get result from worker thread within timeout")
