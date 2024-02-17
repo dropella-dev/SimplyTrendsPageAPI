@@ -981,6 +981,7 @@ def scrape():
      result = result_queue.get()
      print(result)   
     except: 
+        print(a)
         return 'again'
 
     return jsonify(result)
