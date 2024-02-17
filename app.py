@@ -130,7 +130,7 @@ def scraper_function(link, result_queue):
             #browser.refresh()
             # browser.get('https://app.simplytrends.co/shopifystore/barnerbrand.com')
             browser.get(link)
-            domain = WebDriverWait(browser, 0.5).until(
+            domain = WebDriverWait(browser, 2).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '#appBarContainer > div > div > p > p > a.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-1xa0emq > p')))
             domain_name = domain.text
@@ -147,7 +147,7 @@ def scraper_function(link, result_queue):
             icon=icon.get_attribute('src')
             scraped_data['icon'] = icon
             try:
-             monthlyunites = WebDriverWait(browser, 20).until(
+             monthlyunites = WebDriverWait(browser, 3).until(
                 EC.presence_of_element_located((By.XPATH,
                                                 '/html/body/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[2]/div/div/div/div/p')))
              monthlyunites = monthlyunites.text
