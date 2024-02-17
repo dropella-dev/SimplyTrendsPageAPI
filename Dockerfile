@@ -30,7 +30,7 @@ COPY . .
 # Set environment variables to run Chrome in a headless environment
 ENV DISPLAY=:99
 # If using chromedriver or similar tools, ensure they know where to find Chrome
-ENV CHROME_PATH=/opt/chrome/chrome-linux64/chrome  # Adjust based on actual path to the Chrome binary
+ENV CHROME_PATH=/opt/chrome/chrome-linux64/chrome  
 
 
 
