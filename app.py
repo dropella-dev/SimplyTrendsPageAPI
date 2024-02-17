@@ -977,8 +977,13 @@ def scrape():
      thread.start()
      
     # Wait for the result
-     result = result_queue.get()
-     print(result)   
+     try:
+      result = result_queue.get(timeout=20)  # Adjust timeout as necessary
+     except queue.Empty:
+      # Handle the case where no result is produced within the timeout period
+      print("Failed to get result from worker thread within timeout")
+      return jsonify({'error': 'Timeout waiting for result'}), 504   
+       
     except: 
         print(a)
         return 'again'
