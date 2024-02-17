@@ -846,27 +846,6 @@ def scraper_function(link, result_queue):
 
             
             
-            url = "https://similarweb12.p.rapidapi.com/v2/website-analytics/"
-
-            querystring = {"domain": domain.text}
-
-            headers = {
-                "X-RapidAPI-Key": "2f5b0dee51msh47a4e9364d8b93fp13c2b6jsn52cfc6d849dc",
-                "X-RapidAPI-Host": "similarweb12.p.rapidapi.com"
-            }
-
-           # response = requests.get(url, headers=headers, params=querystring)
-           # print(response.text)
-            
-            
-
-
-            #scraped_data['simplyweb'] = response.json
-          #  if(response.text):
-              #  print('ok')
-               # scraped_data['simplyweb']=response.text
-           # else:
-                #scraped_data['simplyweb']='nothign'
             
            
 
