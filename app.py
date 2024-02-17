@@ -1,6 +1,6 @@
 import json
 import os
-from selenium import webdriver
+import undetected_chromedriver as  webdriver
 import re
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
