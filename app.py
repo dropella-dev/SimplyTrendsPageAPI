@@ -1000,6 +1000,7 @@ def scrape():
      thread.join()
     # Wait for the result
      result = result_queue.get()
+     print(result)   
     except: 
         return 'again'
 
