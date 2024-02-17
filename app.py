@@ -62,7 +62,7 @@ def scraper_function(link, result_queue):
 
         #chromedriver_path = ensure_chromedriver()
         options = webdriver.ChromeOptions()
-        service = ChromeService(executable_path="/chromedriver")
+        service = ChromeService(executable_path="/app/chromedriver")
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-renderer-backgrounding")
         options.add_argument("--disable-backgrounding-occluded-windows")
