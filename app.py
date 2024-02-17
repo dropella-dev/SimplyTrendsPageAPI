@@ -972,11 +972,10 @@ def scrape():
 
     # Start a new thread for each scraping request
     try:
-     memory_thread = threading.Thread(target=memory_limiter, args=(1024,), daemon=True)
-     memory_thread.start()
+    
      thread = threading.Thread(target=scraper_function, args=(link, result_queue))
      thread.start()
-     thread.join()
+     
     # Wait for the result
      result = result_queue.get()
      print(result)   
