@@ -146,11 +146,33 @@ def scraper_function(link, result_queue):
                                                 '/html/body/div[1]/header/div[2]/div[2]/div/div/div/div/div[1]/div/img')))
             icon=icon.get_attribute('src')
             scraped_data['icon'] = icon
-
-            storename = WebDriverWait(browser, 10).until(
+            try:
+             monthlyunites = WebDriverWait(browser, 20).until(
                 EC.presence_of_element_located((By.XPATH,
-                                                '/html/body/div[1]/div/div[2]/div/div/div/div/div[3]/div/div/p[1]')))
-            storename = storename.text
+                                                '/html/body/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[2]/div/div/div/div/p')))
+             monthlyunites = monthlyunites.text
+            except:
+                monthlyunites=''
+            print(monthlyunites)
+            scraped_data['monthlyunites'] = monthlyunites
+
+            try:
+                monthlyrevenue = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.XPATH,
+                                                    '/html/body/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[1]/div/div/div/div/p')))
+                monthlyrevenue = monthlyrevenue.text
+            except Exception as e:
+                monthlyrevenue = ''
+            print(monthlyrevenue)
+            scraped_data['monthlyrevenue'] = monthlyrevenue
+
+            try:
+                storename = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, '/html/body/div[1]/div/div[2]/div/div/div/div/div[3]/div/div/p[1]')))
+                storename = storename.text
+            except Exception as e:
+                storename = ''
             print(storename)
             scraped_data['storename'] = storename
             try:
@@ -162,27 +184,17 @@ def scraper_function(link, result_queue):
                 categoryyrank = "-"
             print(categoryyrank)
             scraped_data['categoryyrank'] = categoryyrank
-            
-            
-            monthlyunites = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.XPATH,
-                                                '/html/body/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[2]/div/div/div/div/p')))
-            monthlyunites = monthlyunites.text
-            print(monthlyunites)
-            scraped_data['monthlyunites'] = monthlyunites
 
-            monthlyrevenue = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.XPATH,
-                                                '/html/body/div[1]/div/div[2]/div/div/div/div/div[2]/div/div/div[1]/div/div/div/div/p')))
-            monthlyrevenue = monthlyrevenue.text
-            print(monthlyrevenue)
-            scraped_data['monthlyrevenue'] = monthlyrevenue
-            country = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(1) > div > div > div > div > p > div > span')))
-            country = country.text
+            try:
+                country = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR,
+                                                    '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(1) > div > div > div > div > p > div > span')))
+                country = country.text
+            except Exception as e:
+                country = ''
             print(country)
             scraped_data['country'] = country
+
             try:
                 countryrank = WebDriverWait(browser, 1).until(
                     EC.presence_of_element_located((By.XPATH,
@@ -210,26 +222,32 @@ def scraper_function(link, result_queue):
                 href = "-"
             print("Extracted URL:", hrefs)
             scraped_data['socialmedia'] = hrefs
-            monthstats = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > h2 > span > p > div')))
-            monthstats = monthstats.text
-         
+            try:
+                monthstats = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR,
+                                                    '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > h2 > span > p > div')))
+                monthstats = monthstats.text
+            except Exception as e:
+                monthstats = ''
+            print(monthstats)
             scraped_data['monthstats'] = monthstats
-            visible_owerview = WebDriverWait(browser, 10).until(
+            try:
+             visible_owerview = WebDriverWait(browser, 10).until(
                 EC.presence_of_element_located((By.XPATH,
                                                 '/html/body/div[1]/div/div[2]/div/div/div')))
+            except:
+                visible_owerview=''
 
-           
+            print(visible_owerview.text)
             scraped_data['visible_owerview'] = visible_owerview.text
 
             start_keyword = "Country rank"
             end_keyword = "Category rank"
-            text =  scraped_data['visible_owerview']
+            text = visible_owerview.text
 
             # Find start and end positions
             start_pos = text.find(start_keyword)
-            end_pos = text.find(end_keyword, start_pos + len(start_keyword))
+            end_pos = text.find(end_keyword)
             result = []
 
             # Check if both keywords are found
@@ -239,16 +257,19 @@ def scraper_function(link, result_queue):
 
                 # Split the string into a list at every newline and remove empty strings
                 result = [line for line in relevant_part.split('\n') if line]
-          
-            scraped_data['Country_rank'] = result
-            
+            print(result)
+            if(visible_owerview==''):
+                scraped_data['Country_rank'] = ''
+            else:
+             scraped_data['Country_rank'] = result
+
             start_keyword = "Category rank"
             end_keyword = "Global rank"
-            text =  scraped_data['visible_owerview']
+            text = visible_owerview.text
 
             # Find start and end positions
             start_pos = text.find(start_keyword)
-            end_pos =text.find(end_keyword, start_pos + len(start_keyword))
+            end_pos = text.find(end_keyword)
             result = []
 
             # Check if both keywords are found
@@ -258,16 +279,20 @@ def scraper_function(link, result_queue):
 
                 # Split the string into a list at every newline and remove empty strings
                 result = [line for line in relevant_part.split('\n') if line]
-           
-            scraped_data['Category_rank'] = result
+            print(result)
+            if (visible_owerview == ''):
+                scraped_data['Category_rank'] = ''
+            else:
+                scraped_data['Category_rank'] = result
+
 
             start_keyword = "Global rank"
             end_keyword = "Social media"
-            text =  scraped_data['visible_owerview']
+            text = visible_owerview.text
 
             # Find start and end positions
             start_pos = text.find(start_keyword)
-            end_pos = text.find(end_keyword, start_pos + len(start_keyword))
+            end_pos = text.find(end_keyword)
             result = []
 
             # Check if both keywords are found
@@ -277,56 +302,92 @@ def scraper_function(link, result_queue):
 
                 # Split the string into a list at every newline and remove empty strings
                 result = [line for line in relevant_part.split('\n') if line]
-           
-            scraped_data['Global_rank'] = result
-            language = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(2) > div > div > div > div > p')))
-            language = language.text
+            print(result)
+            if (visible_owerview == ''):
+                scraped_data['Global_rank'] = ''
+            else:
+                scraped_data['Global_rank'] = result
+
+            try:
+                language = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR,
+                                                    '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(2) > div > div > div > div > p')))
+                language = language.text
+            except Exception as e:
+                language = ''
             print(language)
             scraped_data['language'] = language
-            currency = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(3) > div > div > div > div > p')))
-            currency = currency.text
+
+            try:
+                currency = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR,
+                                                    '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(3) > div > div > div.MuiGrid-root.MuiGrid-container.MuiGrid-item.MuiGrid-grid-xs-12.css-ta72l6 > div:nth-child(3) > div > div > div > div > p')))
+                currency = currency.text
+            except Exception as e:
+                currency = ''
             print(currency)
             scraped_data['currency'] = currency
-            firstpublishproduct = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > div:nth-child(3) > div:nth-child(1) > div > div > div > div > p')))
-            firstpublishproduct = firstpublishproduct.text
+
+            try:
+                firstpublishproduct = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR,
+                                                    '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > div:nth-child(3) > div:nth-child(1) > div > div > div > div > p')))
+                firstpublishproduct = firstpublishproduct.text
+            except Exception as e:
+                firstpublishproduct = ''
             print(firstpublishproduct)
             scraped_data['firstpublishproduct'] = firstpublishproduct
-            lastpublishproduct = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > div:nth-child(3) > div:nth-child(2) > div > div > div > div > p')))
-            lastpublishproduct = lastpublishproduct.text
+
+            try:
+                lastpublishproduct = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR,
+                                                    '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > div:nth-child(3) > div:nth-child(2) > div > div > div > div > p')))
+                lastpublishproduct = lastpublishproduct.text
+            except Exception as e:
+                lastpublishproduct = ''
             print(lastpublishproduct)
             scraped_data['lastpublishproduct'] = lastpublishproduct
-            numproducts = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > div:nth-child(3) > div:nth-child(3) > div > div > div > div > p')))
-            numproducts = numproducts.text
+
+            try:
+                numproducts = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.CSS_SELECTOR,
+                                                    '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div:nth-child(4) > div > div:nth-child(3) > div:nth-child(3) > div > div > div > div > p')))
+                numproducts = numproducts.text
+            except Exception as e:
+                numproducts = ''
             print(numproducts)
             scraped_data['numproducts'] = numproducts
-            avgprices = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.XPATH,
-                                                '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[1]/div[4]/div/div/div/div/p')))
-            avgprices = avgprices.text
+
+            try:
+                avgprices = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.XPATH,
+                                                    '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[1]/div[4]/div/div/div/div/p')))
+                avgprices = avgprices.text
+            except Exception as e:
+                avgprices = ''
             print(avgprices)
             scraped_data['avgprices'] = avgprices
-            highestproductprice = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.XPATH,
-                                                '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[1]/div[5]/div/div/div/div/p')))
-            highestproductprice = highestproductprice.text
+
+            try:
+                highestproductprice = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.XPATH,
+                                                    '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[1]/div[5]/div/div/div/div/p')))
+                highestproductprice = highestproductprice.text
+            except Exception as e:
+                highestproductprice = ''
             print(highestproductprice)
             scraped_data['highestproductprice'] = highestproductprice
-            lowestproductprice = WebDriverWait(browser, 10).until(
-                EC.presence_of_element_located((By.XPATH,
-                                                '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[1]/div[6]/div/div/div/div/p')))
-            lowestproductprice = lowestproductprice.text
+
+            try:
+                lowestproductprice = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.XPATH,
+                                                    '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[1]/div[6]/div/div/div/div/p')))
+                lowestproductprice = lowestproductprice.text
+            except Exception as e:
+                lowestproductprice = ''
             print(lowestproductprice)
             scraped_data['lowestproductprice'] = lowestproductprice
+
             try:
                 ch = WebDriverWait(browser, 2).until(
                     EC.presence_of_element_located((By.XPATH,
@@ -401,19 +462,22 @@ def scraper_function(link, result_queue):
                 pass
 
             try:
+
              click = WebDriverWait(browser, 2).until(
                 EC.presence_of_element_located((By.XPATH,
                                                 '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[2]/div[6]/div/div/div/div/div/div[8]/p'))).click()
-             click = WebDriverWait(browser, 10).until(
+
+             click = WebDriverWait(browser, 2).until(
                  EC.presence_of_element_located((By.XPATH,
                                                  '/html/body/div[3]/div[3]/div/div/div')))
             except:
+
                 click = WebDriverWait(browser, 10).until(
                     EC.presence_of_element_located((By.XPATH,
                                                     '/html/body/div[1]/div/div[2]/div/div/div/div/div[4]/div/div[2]/div[5]/div/div/div')))
                 pass
 
-            time.sleep(1)
+            #time.sleep(0.5)
 
 
             div_html = click.get_attribute('innerHTML')
@@ -426,6 +490,8 @@ def scraper_function(link, result_queue):
             vendor_divs = soup.find_all('div', class_='css-1dogkm')
 
             # Loop through the vendor divs to extract the data
+
+
             c=0
             for vendor in vendor_divs:
                 # Extract the vendor name
@@ -533,7 +599,7 @@ def scraper_function(link, result_queue):
                 # num_products = vendor.find_next_sibling('div', class_='css-18jpfvm').find('p').get_text(strip=True)
                 num_products_div = vendor.parent.find_next_sibling('div', class_='css-18jpfvm')
                 num_products = num_products_div.find('p').get_text(
-                    strip=True) if num_products_div else 'Others'
+                    strip=True) if num_products_div else 'Unknown'
 
                 # Append the data to the list
                 data_producttyps.append({'Product_type': vendor_name, 'Distribution': distribution,
@@ -561,31 +627,43 @@ def scraper_function(link, result_queue):
             print(visible_traffic.text)
             scraped_data['visible_traffic'] = visible_traffic.text
             try:
-                monthlyvisits = WebDriverWait(browser, 3).until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                    '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div > div > div > div:nth-child(1) > div > div:nth-child(1) > div > div > div > div > p.MuiTypography-root.MuiTypography-h6.css-1krdksj')))
-                monthlyvisits = monthlyvisits.text
+                try:
+                    monthlyvisits = WebDriverWait(browser, 3).until(
+                        EC.presence_of_element_located((By.CSS_SELECTOR,
+                                                        '#__next > div > div.app-container-box.MuiBox-root.css-w8kjuh > div > div > div > div > div > div > div > div:nth-child(1) > div > div:nth-child(1) > div > div > div > div > p.MuiTypography-root.MuiTypography-h6.css-1krdksj')))
+                    monthlyvisits = monthlyvisits.text
+                except Exception as e:
+                    monthlyvisits = ''
                 print(monthlyvisits)
                 scraped_data['monthlyvisits'] = monthlyvisits
 
-                avgvisitduration = WebDriverWait(browser, 10).until(
-                    EC.presence_of_element_located((By.XPATH,
-                                                    '/html/body/div[1]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div/p')))
-                avgvisitduration = avgvisitduration.text
+                try:
+                    avgvisitduration = WebDriverWait(browser, 10).until(
+                        EC.presence_of_element_located((By.XPATH,
+                                                        '/html/body/div[1]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div[2]/div/div/div/div/p')))
+                    avgvisitduration = avgvisitduration.text
+                except Exception as e:
+                    avgvisitduration = ''
                 print(avgvisitduration)
                 scraped_data['avgvisitduration'] = avgvisitduration
 
-                pagespervisit = WebDriverWait(browser, 10).until(
-                    EC.presence_of_element_located((By.XPATH,
-                                                    '/html/body/div[1]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div[3]/div/div/div/div/p')))
-                pagespervisit = pagespervisit.text
+                try:
+                    pagespervisit = WebDriverWait(browser, 10).until(
+                        EC.presence_of_element_located((By.XPATH,
+                                                        '/html/body/div[1]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div[3]/div/div/div/div/p')))
+                    pagespervisit = pagespervisit.text
+                except Exception as e:
+                    pagespervisit = ''
                 print(pagespervisit)
                 scraped_data['pagespervisit'] = pagespervisit
 
-                bouncertate = WebDriverWait(browser, 10).until(
-                    EC.presence_of_element_located((By.XPATH,
-                                                    '/html/body/div[1]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div[4]/div/div/div/div/p')))
-                bouncertate = bouncertate.text
+                try:
+                    bouncertate = WebDriverWait(browser, 10).until(
+                        EC.presence_of_element_located((By.XPATH,
+                                                        '/html/body/div[1]/div/div[2]/div/div/div/div/div/div/div/div[1]/div/div[4]/div/div/div/div/p')))
+                    bouncertate = bouncertate.text
+                except Exception as e:
+                    bouncertate = ''
                 print(bouncertate)
                 scraped_data['bouncertate'] = bouncertate
 
