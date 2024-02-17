@@ -29,7 +29,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 
 # Copy the rest of your application
-COPY . .
+
 
 # Make sure any binaries or scripts from Chrome are executable, if necessary
 # Depending on how you plan to run Chrome, you might need to set permissions
