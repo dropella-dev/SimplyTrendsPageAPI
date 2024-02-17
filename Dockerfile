@@ -27,7 +27,7 @@ ENV PATH /root/.local/bin:$PATH
 
 # Copy the requirements file and install Python dependencies in one layer
 
-RUN chmod +x chromedriver
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
