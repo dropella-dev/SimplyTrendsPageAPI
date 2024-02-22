@@ -95,7 +95,7 @@ def scraper_function(link, result_queue):
         options.add_argument("--window-size=1920,1080")
         options.add_argument('--load-extension=SimplyTrends')
 
-        browser = webdriver.Chrome(options=options)
+        browser = webdriver.Chrome(options=options,version_main=122)
 
 
         cookies_file = 'cookies_simpletrends.json'
