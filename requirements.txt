@@ -10,3 +10,4 @@ uvicorn
 bs4
 psutil
 timeout_decorator
+aiohttp
