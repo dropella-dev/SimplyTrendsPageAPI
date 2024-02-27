@@ -1,5 +1,7 @@
 import json
 import os
+import asyncio
+import aiohttp
 from uc import undetected_chromedriver as  webdriver
 import re
 from selenium.webdriver.common.by import By
@@ -24,7 +26,6 @@ import queue
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 app = Flask(__name__)
-
 # Queue to handle requests
 request_queue = queue.Queue()
 import psutil
@@ -57,15 +58,24 @@ def ensure_chromedriver():
             chromedriver_path = ChromeDriverManager().install()
     
     return chromedriver_path
+async def get_domains_logos(domains):
+    async def fetch_logo_url(session, domain):
+        url = f'https://besticon-demo.herokuapp.com/allicons.json?url={domain}'
+        async with session.get(url) as response:
+            try:
+                json_data = await response.json()
+                icon_url = json_data['icons'][0]['url']
+                return {'domain': domain ,'image': icon_url}
+            except Exception:
+                return {'domain': domain ,'image': ''}
+    async def fetch_all_logos_urls():
+        async with aiohttp.ClientSession() as session:
+            tasks = [fetch_logo_url(session, domain) for domain in domains]
+            return await asyncio.gather(*tasks)
+    logos = await (fetch_all_logos_urls())
+    return logos
 def scraper_function(link, result_queue):
     try:  
-
-       
-      
-
-        
-            
-        
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-renderer-backgrounding")
         options.add_argument("--disable-backgrounding-occluded-windows")
@@ -141,10 +151,11 @@ def scraper_function(link, result_queue):
 
             print(extension)
             scraped_data['domain_name'] = domain.text
-            icon = WebDriverWait(browser, 0.5).until(
-                EC.presence_of_element_located((By.XPATH,
-                                                '/html/body/div[1]/header/div[2]/div[2]/div/div/div/div/div[1]/div/img')))
-            icon=icon.get_attribute('src')
+            # icon = WebDriverWait(browser, 0.5).until(
+            #     EC.presence_of_element_located((By.XPATH,
+            #                                     '/html/body/div[1]/header/div[2]/div[2]/div/div/div/div/div[1]/div/img')))
+            # icon=icon.get_attribute('src')
+            icon = get_domains_logos(link)['image']
             scraped_data['icon'] = icon
             try:
              monthlyunites = WebDriverWait(browser, 3).until(
@@ -993,4 +1004,3 @@ def scrape():
 
 if __name__ == '__main__':
     app.run(debug=True)
-
