@@ -2,6 +2,7 @@ import json
 import os
 import asyncio
 import aiohttp
+import urllib
 from uc import undetected_chromedriver as  webdriver
 import re
 from selenium.webdriver.common.by import By
@@ -155,8 +156,25 @@ def scraper_function(link, result_queue):
             #     EC.presence_of_element_located((By.XPATH,
             #                                     '/html/body/div[1]/header/div[2]/div[2]/div/div/div/div/div[1]/div/img')))
             # icon=icon.get_attribute('src')
-            icon = get_domains_logos(link)['image']
-            scraped_data['icon'] = icon
+            #icon = asyncio.run(get_domains_logos(link))['image']
+            link1 = link
+            link1 = link1.replace("https://app.simplytrends.co/shopifystore/", "")
+            link1 = link1.split('?')[0]
+
+            url = f'https://besticon-demo.herokuapp.com/allicons.json?url={link1}'
+            print(url)
+            try:
+                with urllib.request.urlopen(url) as response:
+                    json_data = json.loads(response.read().decode('utf-8'))
+                    icon_url = json_data['icons'][0]['url']
+                    print(icon_url)
+                    #return {'domain': domain, 'image': icon_url}
+                    scraped_data['icon'] = icon_url
+
+            except urllib.error.URLError as e:
+                scraped_data['icon'] = " "
+                
+                
             try:
              monthlyunites = WebDriverWait(browser, 3).until(
                 EC.presence_of_element_located((By.XPATH,
@@ -869,7 +887,7 @@ def scraper_function(link, result_queue):
             result_queue.put(scraped_data)
 
         except  Exception as e:
-            print(a)
+            #print(a)
            
 
             pass
@@ -879,7 +897,7 @@ def scraper_function(link, result_queue):
 
 
     except:
-        pritn(a)
+       # print(a)
       
 
 
@@ -996,7 +1014,7 @@ def scrape():
       return jsonify({'error': 'Timeout waiting for result'}), 504   
        
     except: 
-        print(a)
+        #print(a)
         return 'again'
 
     return jsonify(result)
