@@ -5,6 +5,7 @@ import aiohttp
 import urllib
 from uc import undetected_chromedriver as  webdriver
 import re
+import httpx
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -887,7 +888,7 @@ def scraper_function(link, result_queue):
             result_queue.put(scraped_data)
 
         except  Exception as e:
-            #print(a)
+            print(a)
            
 
             pass
@@ -897,10 +898,7 @@ def scraper_function(link, result_queue):
 
 
     except:
-       # print(a)
-      
-
-
+        print(a)
         browser.quit()
         print('exception')
 
@@ -1014,11 +1012,26 @@ def scrape():
       return jsonify({'error': 'Timeout waiting for result'}), 504   
        
     except: 
-        #print(a)
+        print(a)
         return 'again'
 
     return jsonify(result)
 
+@app.route('/ScrapeProductsImages', methods=['POST'])
+def ScrapeProductsImages():
+    data = request.json
+    search_term = data.get('search_term')
+    url = 'https://www.google.com/search?q={0}&tbm=isch'.format(search_term)
+    try:
+        content = httpx.get(url).content
+    except:
+        return jsonify({"response":"Exception occured while requesting the resource from Google Images!"})
+    soup = BeautifulSoup(content,'lxml')
+    images = soup.findAll('img')
+    products_urls = []
+    for image in images[:7]:
+        products_urls.append(image.get('src'))
+    return jsonify(products_urls)
 
 if __name__ == '__main__':
     app.run(debug=True)
