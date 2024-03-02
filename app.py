@@ -1032,6 +1032,22 @@ def ScrapeProductsImages():
     for image in images[:7]:
         products_urls.append(image.get('src'))
     return jsonify(products_urls)
+@app.route('/CaptureLandingPageScreenshot', methods=['POST'])
+def CaptureLandingPageScreenshot():
+    data = request.json
+    domain = data.get('domain')
+    try:
+        hti = Html2Image()
+        image_data = hti.screenshot(url='https://' + domain)
+        image_binary_data = open(image_data[0], 'rb').read()
+        image_bytes_io = BytesIO(image_binary_data)
+        image_pil = Image.open(image_bytes_io)
+        image_pil_bytes_io = BytesIO()
+        image_pil.save(image_pil_bytes_io, format='PNG')
+        image_pil_base64 = base64.b64encode(image_pil_bytes_io.getvalue()).decode('utf-8')
+        return jsonify({'image_base64': image_pil_base64})
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True)
