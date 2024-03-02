@@ -15,3 +15,4 @@ httpx
 lxml
 html2image
 pillow
+imgkit
