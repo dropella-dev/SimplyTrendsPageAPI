@@ -6,6 +6,7 @@ import urllib
 from uc import undetected_chromedriver as  webdriver
 import re
 import httpx
+import imgkit
 from html2image import Html2Image
 import base64
 from io import BytesIO
@@ -1041,15 +1042,10 @@ def CaptureLandingPageScreenshot():
     data = request.json
     domain = data.get('domain')
     try:
-        hti = Html2Image()
-        image_data = hti.screenshot(url='https://' + domain)
-        image_binary_data = open(image_data[0], 'rb').read()
-        image_bytes_io = BytesIO(image_binary_data)
-        image_pil = Image.open(image_bytes_io)
-        image_pil_bytes_io = BytesIO()
-        image_pil.save(image_pil_bytes_io, format='PNG')
-        image_pil_base64 = base64.b64encode(image_pil_bytes_io.getvalue()).decode('utf-8')
-        return jsonify({'image_base64': image_pil_base64})
+        url = 'https://'+domain
+        img = imgkit.from_url(url, False)
+        base64_image = base64.b64encode(img).decode('utf-8')
+        return jsonify({'image_base64': base64_image})
     except Exception as e:
         return jsonify({'error': str(e)})
 
