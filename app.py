@@ -6,6 +6,10 @@ import urllib
 from uc import undetected_chromedriver as  webdriver
 import re
 import httpx
+from html2image import Html2Image
+import base64
+from io import BytesIO
+from PIL import Image
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
