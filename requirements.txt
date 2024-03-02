@@ -13,3 +13,5 @@ timeout_decorator
 aiohttp
 httpx
 lxml
+html2image
+pillow
