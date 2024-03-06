@@ -1074,7 +1074,7 @@ def ScrapeStoreStats():
     options.add_argument("--window-size=1920,1080")
     browser = webdriver.Chrome(options=options,version_main=122)
     browser.get(f'https://socialblade.com/instagram/user/{domain}')
-    browser.implicitly_wait(5)
+    browser.implicitly_wait(10)
     soup = BeautifulSoup(browser.page_source, 'html.parser')
     browser.quit()
     try:
