@@ -1034,7 +1034,7 @@ def ScrapeProductsImages():
     soup = BeautifulSoup(content,'lxml')
     images = soup.findAll('img')
     products_urls = []
-    for image in images[:7]:
+    for image in images:
         products_urls.append(image.get('src'))
     return jsonify(products_urls)
 @app.route('/CaptureLandingPageScreenshot', methods=['POST'])
@@ -1048,6 +1048,56 @@ def CaptureLandingPageScreenshot():
         return jsonify({'image_base64': base64_image})
     except Exception as e:
         return jsonify({'error': str(e)})
-
+@app.route('/ScrapeStoreStats', methods=['POST'])
+def ScrapeStoreStats():
+    data = request.json
+    domain = data.get('domain')
+    options = webdriver.ChromeOptions()
+    options.add_argument("--disable-renderer-backgrounding")
+    options.add_argument("--disable-backgrounding-occluded-windows")
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    prefs = {"profile.managed_default_content_settings.images": 2}
+    options.add_experimental_option("prefs", prefs)
+    options.add_argument("--disk-cache-size=1")       
+    options.add_argument("--disable-gpu")   
+    options.add_argument("--prerender-from-omnibox=disabled")    
+    options.add_argument("--disable-software-rasterizer")
+    prefs = {"profile.managed_default_content_settings.images": 2}
+    options.headless = True
+    options.add_experimental_option("prefs", prefs)
+    windows_user_agent = (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
+    options.add_argument(f"--user-agent={windows_user_agent}")
+    options.add_argument("--window-size=1920,1080")
+    browser = webdriver.Chrome(options=options,version_main=122)
+    browser.get(f'https://socialblade.com/instagram/user/{domain}')
+    browser.implicitly_wait(5)
+    soup = BeautifulSoup(browser.page_source, 'html.parser')
+    browser.quit()
+    try:
+        statistics_container = soup.find(id="socialblade-user-content").find('div').find_all('div')[3]
+    except:
+        return jsonify({'stastics':'error in requesting the resource , either your internet connection is slow or you have been blocked by cloudflare'})
+    data = []
+    json_data = {}
+    for stat in statistics_container:
+        try:
+            raw_data = stat.get_text().strip()
+            data.append(raw_data)
+        except:
+            pass
+    try:
+        data = list(set(data))
+        data.remove('')
+        for record in data:
+            desc = record.split('\n\n')[1]
+            val = record.split('\n\n')[0]
+            json_data[desc] = val
+        return jsonify(json_data)
+    except:
+        return jsonify({'stastics':'error in handeling data'})
 if __name__ == '__main__':
     app.run(debug=True)
