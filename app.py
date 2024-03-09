@@ -1074,6 +1074,8 @@ def ScrapeStoreStats():
     'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
     response = requests.get(url, headers=headers)
     soup = BeautifulSoup(response.text, 'html.parser')
+    print(response.status_code)
+    print(soup)
     tree = html.fromstring(response.text)
     json_data = {}
     try :
