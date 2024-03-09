@@ -7,6 +7,8 @@ from uc import undetected_chromedriver as  webdriver
 import re
 import httpx
 import imgkit
+from lxml import html
+from bs4 import BeautifulSoup
 from html2image import Html2Image
 import base64
 from io import BytesIO
@@ -1052,37 +1054,48 @@ def CaptureLandingPageScreenshot():
 def ScrapeStoreStats():
     data = request.json
     domain = data.get('domain')
-    options = webdriver.ChromeOptions()
-    options.add_argument("--disable-renderer-backgrounding")
-    options.add_argument("--disable-backgrounding-occluded-windows")
-    options.add_argument("--headless")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    prefs = {"profile.managed_default_content_settings.images": 2}
-    options.add_experimental_option("prefs", prefs)
-    options.add_argument("--disk-cache-size=1")       
-    options.add_argument("--disable-gpu")   
-    options.add_argument("--prerender-from-omnibox=disabled")    
-    options.add_argument("--disable-software-rasterizer")
-    prefs = {"profile.managed_default_content_settings.images": 2}
-    options.headless = True
-    options.add_experimental_option("prefs", prefs)
-    windows_user_agent = (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-            "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
-    options.add_argument(f"--user-agent={windows_user_agent}")
-    options.add_argument("--window-size=1920,1080")
-    browser = webdriver.Chrome(options=options,version_main=122)
-    browser.get(f'https://socialblade.com/instagram/user/{domain}')
-    browser.implicitly_wait(10)
-    soup = BeautifulSoup(browser.page_source, 'html.parser')
-    browser.quit()
+    url = f'https://socialblade.com/instagram/user/{domain}'
+    headers = {
+    'authority': 'socialblade.com',
+    'method': 'GET',
+    'path': f'/instagram/user/{domain}',
+    'scheme':'https',
+    'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+    'Accept-Encoding':'gzip, deflate, br, zstd',
+    'Accept-Language':'en-US,en;q=0.9',
+    'Cache-Control':'no-cache',
+    'Cookie':'__qca=P0-1598979196-1709660689169; _sharedID=cb54c19d-22d3-4276-8d27-9abf56dc1e01; _sharedID_cst=zix7LPQsHA%3D%3D; pbjs-unifiedid_cst=zix7LPQsHA%3D%3D; panoramaId_expiry=1710265501894; _cc_id=4119c4d28b6cf1eaa714387e54bd3fc1; panoramaId=904ed5f94b05cc8c39f3dcd3f9ce4945a7025a92c4f42d956e9cb7bcb8287a3d; PHPSESSXX=eivqvu43asrpllovgfemtl5v6g; _clck=1ull26a%7C2%7Cfjv%7C0%7C1525; _lr_geo_location=PK; lngtd-sdp=5; AMZN-Token=v2FweLxhYW5DUUlrbmMrNjhDMHdMakNaL0FhOHZCZk1jcWhhbFZyeG92UlREc1g1MlJzQkw0T3VSaXBPaUdaU091MGJSaXMzL3IyVEdUdzFKSUN5amVDQm04b1ZWUHN1TUJ6QXdlL2ZNUGdxL3BYczVYbnJiUmRjMVo1UW9IR1NPQm13SjJYem1DTlh6ejZLOE9IOXlBTUVXeVlqZm5XOHV3NE1GRmdabUlvV1NQVzJrS1V6enZCQVJvMXB4c0JVPWJrdgFiaXZ4GFkrKy92YzZGQUZQdnY3MUU3Nys5MnBNMP8=; pbjs-unifiedid=%7B%22TDID%22%3A%22b3bfefff-6083-4f15-8c2d-39a7eb5def30%22%2C%22TDID_LOOKUP%22%3A%22TRUE%22%2C%22TDID_CREATED_AT%22%3A%222024-02-07T21%3A08%3A22%22%7D; cto_bidid=MXKlLF9CRkRaVWZINlpUZEpWdSUyQmJlRFFJUE84NHcybVhHenhWNXdZOSUyRmpvZVRDeWdPclMwc3dYU0FHejd4NE1LJTJCOTJnM3hSVSUyRkNtdVQlMkIlMkZJRXJYZWFqRFAlMkYzdFhnRmRBeGxvY2xEeFdhTG92Y2RaRTMyU2xMTVMzMDJpYjk2dGJFZVF5; cto_bundle=6L4_FF9NQXElMkJGRDNFeHQ3SEglMkZJcG4xVnlmR3lOWlY2YkNrbXdyJTJGWVNuMHZTRXVrZWdhOUdlb2dod0VwalJhenFSViUyQjlDUk5QbTViclByRGhLVEM2N1FmN2FEcXEzYXYlMkJoMlNkcXdIeElUMklYNFlNUnpCdDE1aWNWY2ZPMVRLaCUyQklCaEplNUdZNHZyUjRGZXZYcG9BcU43QWUxZWR0TFcweU8ybUJqZXlWUDFrYmtKRHZCYXR3OUt2cGQ0dyUyQktpZVJjclpzbzRkQXRoTW5Pc05XdDRNSkFGYmdqMDRhZWRGT29pVXNTYlh2aW9ZYUJmWE9RJTJCUDBha0JFVSUyRlc5MG1yamUzSzQ4OXYxS1JEOFFlVEZPaFVOZVBqYVRuaVJiSDlEbHdCaHhVNGJPRUtxWmZVTE5wS2tZVE9SY0dKcWZIenRXbw; _clsk=1772eam%7C1709846925415%7C5%7C0%7Cs.clarity.ms%2Fcollect; __gads=ID=398b1ac2e9855f77:T=1709660718:RT=1709846932:S=ALNI_MZlEwBAaUGzkR5LwDX2Q6CtttnZVw; __gpi=UID=00000d3e687c3e7a:T=1709660718:RT=1709846932:S=ALNI_MYWuBiz9F2b_bt_C5mY0PYrffsPLg; __eoi=ID=815aea9e2b7dd456:T=1709660718:RT=1709846932:S=AA-AfjY50e4ZdgwtgkWE6MWs0ki3',
+    'Pragma':'no-cache',
+    'Sec-Fetch-Dest':'document',
+    'Sec-Fetch-Mode':'navigate',
+    'Sec-Fetch-Site':'none',
+    'Sec-Fetch-User':'?1',
+    'Upgrade-Insecure-Requests':'1',
+    'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'}
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    tree = html.fromstring(response.text)
+    json_data = {}
+    try :
+        stats = soup.find_all('div', class_='YouTubeUserTopInfo')
+    except:
+        return jsonify({'stastics':'resource not found!'})
+    for stat in stats[:-1]:
+        try:
+            raw_text = stat.get_text().strip().split('\n')
+            if "Engagement" in raw_text[0]:
+                cleaned_data = [item.strip().replace('\xa0', '') for item in raw_text if item.strip()]
+                label = cleaned_data[0].replace('Rate', '').strip()
+                value = cleaned_data[-1]
+                raw_text = [label, value]
+        except:
+            pass
+        json_data[raw_text[0]] = raw_text[1]
     try:
         statistics_container = soup.find(id="socialblade-user-content").find('div').find_all('div')[3]
     except:
-        return jsonify({'stastics':'error in requesting the resource , either your internet connection is slow or you have been blocked by cloudflare'})
+        pass
     data = []
-    json_data = {}
     for stat in statistics_container:
         try:
             raw_data = stat.get_text().strip()
@@ -1096,8 +1109,32 @@ def ScrapeStoreStats():
             desc = record.split('\n\n')[1]
             val = record.split('\n\n')[0]
             json_data[desc] = val
-        return jsonify(json_data)
     except:
-        return jsonify({'stastics':'error in handeling data'})
+        pass
+    
+    graph_data = []
+    try:
+        all_data_points = tree.xpath('/html/body/div[11]/div[1]/div[11]//div')
+    except:
+        json_data['graph_data'] = ''
+        return jsonify(json_data)
+    for data_point in all_data_points:
+        try:
+            date = data_point.xpath('div[1]/div[1]/text()')
+            date = ''.join(date)
+            day = data_point.xpath('div[1]/div[2]/text()')
+            day = ''.join(day)
+            followers = data_point.xpath('div[2]/div[2]/text()')
+            followers = (''.join(followers).strip())
+            following = data_point.xpath('div[3]/div[2]/text()')
+            following = ''.join(following)
+            media = data_point.xpath('div[4]/div[2]/text()')
+            media = ''.join(media)
+            if not len(date) == 0:
+                graph_data.append({"date":date,"day":day,"followers":followers,"following":following,"media":media})
+        except:
+            pass
+    json_data['graph_data'] = graph_data
+    return jsonify(json_data)
 if __name__ == '__main__':
     app.run(debug=True)
