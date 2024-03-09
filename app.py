@@ -1091,6 +1091,7 @@ def ScrapeStoreStats():
         except:
             pass
         json_data[raw_text[0]] = raw_text[1]
+    statistics_container = list()
     try:
         statistics_container = soup.find(id="socialblade-user-content").find('div').find_all('div')[3]
     except:
