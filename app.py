@@ -13,6 +13,8 @@ from html2image import Html2Image
 import base64
 from io import BytesIO
 from PIL import Image
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -1041,15 +1043,40 @@ def ScrapeProductsImages():
     return jsonify(products_urls)
 @app.route('/CaptureLandingPageScreenshot', methods=['POST'])
 def CaptureLandingPageScreenshot():
+    #data = request.json
+    #domain = data.get('domain')
+    #try:
+    #    url = 'https://'+domain
+    #    img = imgkit.from_url(url, False)
+    #    base64_image = base64.b64encode(img).decode('utf-8')
+    #    return jsonify({'image_base64': base64_image})
+    #except Exception as e:
+    #    return jsonify({'error': str(e)})
     data = request.json
     domain = data.get('domain')
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--disable-extensions')
+    chrome_options.add_argument("--hide-scrollbars")
+    chrome_options.add_experimental_option("excludeSwitches", ["disable-popup-blocking"])
+    chrome_options.add_argument('--disable-logging')
+    chrome_options.add_argument('--single-process')
+    chrome_options.add_argument('--disable-infobars')
+    chrome_options.add_argument('--disable-javascript')
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-notifications")
+    chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+    driver = webdriver.Chrome(options=chrome_options)
     try:
         url = 'https://'+domain
-        img = imgkit.from_url(url, False)
-        base64_image = base64.b64encode(img).decode('utf-8')
+        driver.get(url)
+        driver.set_window_size(1080,720)
+        base64_image = driver.get_screenshot_as_base64()
+        driver.quit()
         return jsonify({'image_base64': base64_image})
     except Exception as e:
-        return jsonify({'error': str(e)})
+        return jsonify({'image_base64': ''})
 @app.route('/ScrapeStoreStats', methods=['POST'])
 def ScrapeStoreStats():
     data = request.json
