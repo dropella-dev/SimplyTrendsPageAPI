@@ -181,8 +181,8 @@ def scraper_function(link, result_queue):
                     #return {'domain': domain, 'image': icon_url}
                     scraped_data['icon'] = icon_url
 
-            except urllib.error.URLError as e:
-                scraped_data['icon'] = " "
+            except:
+                    scraped_data['icon'] = " "
                 
                 
             try:
