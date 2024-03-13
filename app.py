@@ -1042,41 +1042,13 @@ def ScrapeProductsImages():
     for image in images:
         products_urls.append(image.get('src'))
     return jsonify(products_urls)
+
+
 @app.route('/CaptureLandingPageScreenshot', methods=['POST'])
 def CaptureLandingPageScreenshot():
-    #data = request.json
-    #domain = data.get('domain')
-    #try:
-    #    url = 'https://'+domain
-    #    img = imgkit.from_url(url, False)
-    #    base64_image = base64.b64encode(img).decode('utf-8')
-    #    return jsonify({'image_base64': base64_image})
-    #except Exception as e:
-    #    return jsonify({'error': str(e)})
-    # try:
-    #     url = f"https://{domain}"
-    #     #urle = ul.quote_plus(url)
-    #     key = "AIzaSyCT4jSfIdwvz0ZjjeXvd2V0ElwfgSnzzyk"
-    #     strategy = "desktop"
-    #     lighthouse_config = {
-    #         'settings': {
-    #         'throttlingMethod': 'devtools',
-    #         'onlyCategories': ['performance'],
-    #         'onlyAudits': ['final-screenshot']
-    #                     }
-    #                         }
-        
-    #     lighthouse_config_str = json.dumps(lighthouse_config)  
-    #     u = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?key={key}&strategy={strategy}&lighthouseConfig={lighthouse_config_str}&url={url}"
-    #     j = requests.get(u).json()
-    #     ss_encoded = j['lighthouseResult']['audits']['final-screenshot']['details']['data']
-    #     return jsonify({'image_base64': ss_encoded.replace("data:image/jpeg;base64,","").strip()})
-    # except:
-    #     return jsonify({'image_base64': ''})
-
     data = request.json
     domain = data.get('domain')
-    options = webdriver.ChromeOptions() 
+    options = webdriver.ChromeOptions()    
     options.add_argument("--disable-renderer-backgrounding")
     options.add_argument("--disable-backgrounding-occluded-windows")
     options.add_argument("--headless")
@@ -1092,8 +1064,6 @@ def CaptureLandingPageScreenshot():
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
         "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
     )
-    scraped_data = {}
-
     options.add_argument(f"--user-agent={windows_user_agent}")
     options.add_argument("--window-size=1080x720")
 
@@ -1102,7 +1072,6 @@ def CaptureLandingPageScreenshot():
     try:
         url = 'https://'+domain
         browser.get(url)
-        browser.set_window_size(1080,720)
         base64_image = browser.get_screenshot_as_base64()
         browser.quit()
         return jsonify({'image_base64': base64_image})
