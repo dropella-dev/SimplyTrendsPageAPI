@@ -1053,54 +1053,62 @@ def CaptureLandingPageScreenshot():
     #    return jsonify({'image_base64': base64_image})
     #except Exception as e:
     #    return jsonify({'error': str(e)})
+    # try:
+    #     url = f"https://{domain}"
+    #     #urle = ul.quote_plus(url)
+    #     key = "AIzaSyCT4jSfIdwvz0ZjjeXvd2V0ElwfgSnzzyk"
+    #     strategy = "desktop"
+    #     lighthouse_config = {
+    #         'settings': {
+    #         'throttlingMethod': 'devtools',
+    #         'onlyCategories': ['performance'],
+    #         'onlyAudits': ['final-screenshot']
+    #                     }
+    #                         }
+        
+    #     lighthouse_config_str = json.dumps(lighthouse_config)  
+    #     u = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?key={key}&strategy={strategy}&lighthouseConfig={lighthouse_config_str}&url={url}"
+    #     j = requests.get(u).json()
+    #     ss_encoded = j['lighthouseResult']['audits']['final-screenshot']['details']['data']
+    #     return jsonify({'image_base64': ss_encoded.replace("data:image/jpeg;base64,","").strip()})
+    # except:
+    #     return jsonify({'image_base64': ''})
+
     data = request.json
     domain = data.get('domain')
+    options = webdriver.ChromeOptions() 
+    options.add_argument("--disable-renderer-backgrounding")
+    options.add_argument("--disable-backgrounding-occluded-windows")
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disk-cache-size=1")    
+    options.add_argument("--disable-gpu")   
+    options.add_argument("--prerender-from-omnibox=disabled")    
+    options.add_argument("--disable-software-rasterizer")
+    options.add_argument("--hide-scrollbars")
+    options.headless = True
+    windows_user_agent = (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    )
+    scraped_data = {}
+
+    options.add_argument(f"--user-agent={windows_user_agent}")
+    options.add_argument("--window-size=1080x720")
+
+    browser = webdriver.Chrome(options=options)
+
     try:
-        url = f"https://{domain}"
-        #urle = ul.quote_plus(url)
-        key = "AIzaSyCT4jSfIdwvz0ZjjeXvd2V0ElwfgSnzzyk"
-        strategy = "desktop"
-        lighthouse_config = {
-            'settings': {
-            'throttlingMethod': 'devtools',
-            'onlyCategories': ['performance'],
-            'onlyAudits': ['final-screenshot']
-                        }
-                            }
-        
-        lighthouse_config_str = json.dumps(lighthouse_config)  
-        u = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?key={key}&strategy={strategy}&lighthouseConfig={lighthouse_config_str}&url={url}"
-        j = requests.get(u).json()
-        ss_encoded = j['lighthouseResult']['audits']['final-screenshot']['details']['data']
-        return jsonify({'image_base64': ss_encoded.replace("data:image/jpeg;base64,","").strip()})
-    except:
+        url = 'https://'+domain
+        browser.get(url)
+        browser.set_window_size(1080,720)
+        base64_image = browser.get_screenshot_as_base64()
+        browser.quit()
+        return jsonify({'image_base64': base64_image})
+    except Exception as e:
         return jsonify({'image_base64': ''})
 
-        
-    # chrome_options = Options()
-    # chrome_options.add_argument('--headless')
-    # chrome_options.add_argument('--disable-gpu')
-    # chrome_options.add_argument('--disable-extensions')
-    # chrome_options.add_argument("--hide-scrollbars")
-    # chrome_options.add_experimental_option("excludeSwitches", ["disable-popup-blocking"])
-    # chrome_options.add_argument('--disable-logging')
-    # chrome_options.add_argument('--single-process')
-    # chrome_options.add_argument('--disable-infobars')
-    # chrome_options.add_argument('--disable-javascript')
-    # chrome_options.add_argument("--no-sandbox")
-    # chrome_options.add_argument("--disable-notifications")
-    # chrome_options.add_argument('--disable-blink-features=AutomationControlled')
-    # driver = webdriver.Chrome(options=chrome_options)
-    # try:
-    #     url = 'https://'+domain
-    #     driver.get(url)
-    #     driver.set_window_size(1080,720)
-    #     base64_image = driver.get_screenshot_as_base64()
-    #     driver.quit()
-    #     return jsonify({'image_base64': base64_image})
-    # except Exception as e:
-    #     return jsonify({'image_base64': ''})
-    
 @app.route('/ScrapeStoreStats', methods=['POST'])
 def ScrapeStoreStats():
     data = request.json
