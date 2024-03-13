@@ -1057,7 +1057,7 @@ def CaptureLandingPageScreenshot():
     domain = data.get('domain')
     try:
         url = f"https://{domain}"
-        urle = ul.quote_plus(url)
+        #urle = ul.quote_plus(url)
         key = "AIzaSyCT4jSfIdwvz0ZjjeXvd2V0ElwfgSnzzyk"
         strategy = "desktop"
         lighthouse_config = {
@@ -1069,7 +1069,7 @@ def CaptureLandingPageScreenshot():
                             }
         
         lighthouse_config_str = json.dumps(lighthouse_config)  
-        u = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?key={key}&strategy={strategy}&lighthouseConfig={lighthouse_config_str}&url={urle}"
+        u = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?key={key}&strategy={strategy}&lighthouseConfig={lighthouse_config_str}&url={url}"
         j = requests.get(u).json()
         ss_encoded = j['lighthouseResult']['audits']['final-screenshot']['details']['data']
         return jsonify({'image_base64': ss_encoded.replace("data:image/jpeg;base64,","").strip()})
