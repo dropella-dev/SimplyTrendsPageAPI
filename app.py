@@ -1054,29 +1054,52 @@ def CaptureLandingPageScreenshot():
     #    return jsonify({'error': str(e)})
     data = request.json
     domain = data.get('domain')
-    chrome_options = Options()
-    chrome_options.add_argument('--headless')
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--disable-extensions')
-    chrome_options.add_argument("--hide-scrollbars")
-    chrome_options.add_experimental_option("excludeSwitches", ["disable-popup-blocking"])
-    chrome_options.add_argument('--disable-logging')
-    chrome_options.add_argument('--single-process')
-    chrome_options.add_argument('--disable-infobars')
-    chrome_options.add_argument('--disable-javascript')
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-notifications")
-    chrome_options.add_argument('--disable-blink-features=AutomationControlled')
-    driver = webdriver.Chrome(options=chrome_options)
     try:
-        url = 'https://'+domain
-        driver.get(url)
-        driver.set_window_size(1080,720)
-        base64_image = driver.get_screenshot_as_base64()
-        driver.quit()
-        return jsonify({'image_base64': base64_image})
-    except Exception as e:
+        url = f"https://{domain}"
+        urle = ul.quote_plus(url)
+        key = "AIzaSyCT4jSfIdwvz0ZjjeXvd2V0ElwfgSnzzyk"
+        strategy = "desktop"
+        lighthouse_config = {
+            'settings': {
+            'throttlingMethod': 'devtools',
+            'onlyCategories': ['performance'],
+            'onlyAudits': ['final-screenshot']
+                        }
+                            }
+        
+        lighthouse_config_str = json.dumps(lighthouse_config)  
+        u = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?key={key}&strategy={strategy}&lighthouseConfig={lighthouse_config_str}&url={urle}"
+        j = requests.get(u).json()
+        ss_encoded = j['lighthouseResult']['audits']['final-screenshot']['details']['data']
+        return jsonify({'image_base64': ss_encoded.replace("data:image/jpeg;base64,","").strip()})
+    except:
         return jsonify({'image_base64': ''})
+
+        
+    # chrome_options = Options()
+    # chrome_options.add_argument('--headless')
+    # chrome_options.add_argument('--disable-gpu')
+    # chrome_options.add_argument('--disable-extensions')
+    # chrome_options.add_argument("--hide-scrollbars")
+    # chrome_options.add_experimental_option("excludeSwitches", ["disable-popup-blocking"])
+    # chrome_options.add_argument('--disable-logging')
+    # chrome_options.add_argument('--single-process')
+    # chrome_options.add_argument('--disable-infobars')
+    # chrome_options.add_argument('--disable-javascript')
+    # chrome_options.add_argument("--no-sandbox")
+    # chrome_options.add_argument("--disable-notifications")
+    # chrome_options.add_argument('--disable-blink-features=AutomationControlled')
+    # driver = webdriver.Chrome(options=chrome_options)
+    # try:
+    #     url = 'https://'+domain
+    #     driver.get(url)
+    #     driver.set_window_size(1080,720)
+    #     base64_image = driver.get_screenshot_as_base64()
+    #     driver.quit()
+    #     return jsonify({'image_base64': base64_image})
+    # except Exception as e:
+    #     return jsonify({'image_base64': ''})
+    
 @app.route('/ScrapeStoreStats', methods=['POST'])
 def ScrapeStoreStats():
     data = request.json
