@@ -908,7 +908,7 @@ def scraper_function(link, result_queue):
 
 
     except:
-        print(a)
+      
         browser.quit()
         print('exception')
 
@@ -1022,7 +1022,7 @@ def scrape():
       return jsonify({'error': 'Timeout waiting for result'}), 504   
        
     except: 
-        print(a)
+       
         return 'again'
 
     return jsonify(result)
