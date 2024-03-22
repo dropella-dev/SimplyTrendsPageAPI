@@ -86,6 +86,21 @@ async def get_domains_logos(domains):
             return await asyncio.gather(*tasks)
     logos = await (fetch_all_logos_urls())
     return logos
+def find_simplytrends_folder():
+    current_dir = os.getcwd()  # Get the current working directory
+
+    try:
+        simplytrends_dir = next(folder for folder in os.listdir(current_dir) if folder == "SimplyTrends")
+        return os.path.join(current_dir, simplytrends_dir)
+    except StopIteration:
+        raise FileNotFoundError("SimplyTrends folder not found in the current directory.")
+
+try:
+    simplytrends_folder = find_simplytrends_folder()
+    print("SimplyTrends folder found at:", simplytrends_folder)
+except FileNotFoundError as e:
+    print(e)
+
 def scraper_function(link, result_queue):
     try:  
         options = webdriver.ChromeOptions()
@@ -124,6 +139,9 @@ def scraper_function(link, result_queue):
         try:
 
             browser.get(link)
+            find_simplytrends_folder()
+
+
 
             # cookies = browser.get_cookies()
             # print("Cookies from first site:", cookies)
