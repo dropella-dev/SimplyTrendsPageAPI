@@ -178,6 +178,7 @@ def scraper_function(link, result_queue):
                                                 '#appBarContainer > div > div > p > p > a.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-1xa0emq > p')))
              domain_name = domain.text
             except:
+                app.app_context()
                 base64_image = browser.get_screenshot_as_base64()                    
                 scraped_data['screeeenchoitt'] = jsonify({'image_base64': base64_image})
                 domain = WebDriverWait(browser, 5).until(
