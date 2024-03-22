@@ -908,7 +908,7 @@ def scraper_function(link, result_queue):
 
 
     except:
-      
+        print(a)
         browser.quit()
         print('exception')
 
