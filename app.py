@@ -152,10 +152,16 @@ def scraper_function(link, result_queue):
             #browser.refresh()
             # browser.get('https://app.simplytrends.co/shopifystore/barnerbrand.com')
             browser.get(link)
-            domain = WebDriverWait(browser, 2).until(
+            try:
+             domain = WebDriverWait(browser, 2).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '#appBarContainer > div > div > p > p > a.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-1xa0emq > p')))
-            domain_name = domain.text
+             domain_name = domain.text
+            except:
+                domain = WebDriverWait(browser, 5).until(
+                EC.presence_of_element_located((By.CSS_SELECTOR,
+                                                '#appBarContainer > div > div > p > p > a.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-1xa0emq > p')))
+                domain_name = domain.text
             dot_position = domain_name.find('.')
 
             # Extract the text from the dot position to the end of the string
