@@ -98,11 +98,13 @@ def find_simplytrends_folder():
 try:
     simplytrends_folder = find_simplytrends_folder()
     print("SimplyTrends folder found at:", simplytrends_folder)
+    return simplytrends_folder
 except FileNotFoundError as e:
     print(e)
 
 def scraper_function(link, result_queue):
     try:  
+        d=find_simplytrends_folder()
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-renderer-backgrounding")
         options.add_argument("--disable-backgrounding-occluded-windows")
@@ -130,7 +132,7 @@ def scraper_function(link, result_queue):
         simplyweb={}
         options.add_argument(f"--user-agent={windows_user_agent}")
         options.add_argument("--window-size=1920,1080")
-        options.add_argument('--load-extension=SimplyTrends')
+        options.add_argument(f'--load-extension={d}')
 
         browser = webdriver.Chrome(options=options)
 
