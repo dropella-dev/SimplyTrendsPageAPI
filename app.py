@@ -98,7 +98,7 @@ def find_simplytrends_folder():
 try:
     simplytrends_folder = find_simplytrends_folder()
     print("SimplyTrends folder found at:", simplytrends_folder)
-    return simplytrends_folder
+    
 except FileNotFoundError as e:
     print(e)
 
@@ -141,7 +141,7 @@ def scraper_function(link, result_queue):
         try:
 
             browser.get(link)
-            find_simplytrends_folder()
+            
 
 
 
@@ -173,11 +173,13 @@ def scraper_function(link, result_queue):
             # browser.get('https://app.simplytrends.co/shopifystore/barnerbrand.com')
             browser.get(link)
             try:
-             domain = WebDriverWait(browser, 2).until(
+             domain = WebDriverWait(browser, 20).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '#appBarContainer > div > div > p > p > a.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-1xa0emq > p')))
              domain_name = domain.text
             except:
+                base64_image = browser.get_screenshot_as_base64()    
+                return jsonify({'image_base64': base64_image})
                 domain = WebDriverWait(browser, 5).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '#appBarContainer > div > div > p > p > a.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-1xa0emq > p')))
