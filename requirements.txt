@@ -17,3 +17,4 @@ html2image
 pillow
 imgkit
 aioflask
+Flask[async]
