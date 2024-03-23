@@ -16,5 +16,5 @@ lxml
 html2image
 pillow
 imgkit
-'flask[async]'
+"Flask[async]”
 asgiref
