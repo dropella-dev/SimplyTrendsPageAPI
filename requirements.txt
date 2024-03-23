@@ -16,5 +16,4 @@ lxml
 html2image
 pillow
 imgkit
-"Flask[async]”
-asgiref
+aioflask
