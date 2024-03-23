@@ -1114,7 +1114,7 @@ async def instagram_stats():
     account_name = data.get('account_name')
     access_key = "f2c30434bbmsh8c1a4392731f17ep119b93jsn79863bf924bf"
     host = "robigram.p.rapidapi.com"
-    async def get_account_media_count(account_name, retries=3):
+    async def get_account_media_count(account_name, retries=5):
         url = "https://robigram.p.rapidapi.com/api/insta/andr/userinfo"
         querystring = {"username": f"{account_name}"}
         headers = {
@@ -1137,7 +1137,7 @@ async def instagram_stats():
                 print("All retries exhausted.")
                 return {'media' : ''}
 
-    async def get_account_followers(account_name,retries=3):
+    async def get_account_followers(account_name,retries=5):
         url = "https://robigram.p.rapidapi.com/api/insta/andr/userinfo"
         querystring = {"username":f"{account_name}"}
         headers = {
@@ -1159,7 +1159,7 @@ async def instagram_stats():
                 print("All retries exhausted.")
                 return {'followers': ''}
 
-    async def get_account_following(account_name,retries=3):
+    async def get_account_following(account_name,retries=5):
         url = "https://robigram.p.rapidapi.com/api/insta/andr/userinfo"
         querystring = {"username":f"{account_name}"}
         headers = {
@@ -1181,7 +1181,7 @@ async def instagram_stats():
                 print("All retries exhausted.")
                 return {'following': ''}
 
-    async def get_account_engagement_rate(account_name,num_of_media=16,retries=3):
+    async def get_account_engagement_rate(account_name,num_of_media=16,retries=5):
         followers = await get_account_followers(account_name)
         url = "https://robigram.p.rapidapi.com/api/insta/andr/scrap/allmedia"
         querystring = {"username":f"{account_name}","count":f"{num_of_media}"}
@@ -1208,7 +1208,7 @@ async def instagram_stats():
                 print("All retries exhausted.")
                 return {'Engagement': ''}
 
-    async def get_account_average_likes(account_name,num_of_media=16,retries=3):
+    async def get_account_average_likes(account_name,num_of_media=16,retries=5):
         url = "https://robigram.p.rapidapi.com/api/insta/andr/scrap/allmedia"
         querystring = {"username":f"{account_name}","count":f"{num_of_media}"}
         headers = {
@@ -1232,7 +1232,7 @@ async def instagram_stats():
                 print("All retries exhausted.")
                 return {'Avg Likes': ''}
 
-    async def get_account_average_comments(account_name,num_of_media=16,retries=3):
+    async def get_account_average_comments(account_name,num_of_media=16,retries=5):
         url = "https://robigram.p.rapidapi.com/api/insta/andr/scrap/allmedia"
         querystring = {"username":f"{account_name}","count":f"{num_of_media}"}
         headers = {
