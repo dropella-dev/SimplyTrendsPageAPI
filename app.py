@@ -180,6 +180,8 @@ def scraper_function(link, result_queue):
              domain_name = domain.text
             except:
                 with current_app.app_context():
+                     base64_image = browser.get_screenshot_as_base64()
+                     print(base64_image, flush=True)
                      scraped_data['screeeenchoitt'] = jsonify({'image_base64': base64_image})
                 domain = WebDriverWait(browser, 5).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
@@ -845,6 +847,7 @@ def scraper_function(link, result_queue):
                 except:
                     pass
             except:
+                print(s)
                 pass
             click = WebDriverWait(browser, 5).until(
                 EC.presence_of_element_located((By.XPATH,
@@ -926,7 +929,8 @@ def scraper_function(link, result_queue):
                 pass
             result_queue.put(scraped_data)
 
-        except  Exception as e:
+        except  Exception as e:            
+            print(e)
             print(a)
            
 
