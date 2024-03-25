@@ -142,6 +142,7 @@ def scraper_function(link, result_queue):
         try:
 
             browser.get(link)
+            print(link, flush=True)
             
 
 
