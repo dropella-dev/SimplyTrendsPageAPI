@@ -138,7 +138,7 @@ def scraper_function(link, result_queue):
 
         browser = webdriver.Chrome(options=options)"""
         options = webdriver.ChromeOptions()
-        options.add_argument('--profile-director\\Profile 3')
+        #options.add_argument('--profile-director\\Profile 3')
         options.add_argument("--disable-renderer-backgrounding")
         options.add_argument("--disable-backgrounding-occluded-windows")
         options.add_argument("--headless")
