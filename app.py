@@ -168,7 +168,7 @@ def scraper_function(link, result_queue):
             for cookie in cookies:
                 browser.add_cookie(cookie)
             # Open the second website
-            print('done')
+            print('done', flush=True)
 
             # Refresh the page to apply cookies
             #browser.refresh()
