@@ -144,7 +144,8 @@ def scraper_function(link, result_queue):
         options.add_argument("--headless")
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
-        options.add_extension('SimplyTrends.crx')
+        #options.add_extension('SimplyTrends.crx')
+        options.add_argument("--load-extension=SimplyTrends")
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.headless = True
 
