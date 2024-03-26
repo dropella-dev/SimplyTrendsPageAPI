@@ -1048,6 +1048,7 @@ def scrape():
       return jsonify({'error': 'Timeout waiting for result'}), 504   
        
     except: 
+        print(a)
        
         return 'again'
 
