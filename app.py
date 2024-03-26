@@ -93,6 +93,7 @@ def scraper_function(link, result_queue):
     try:  
        
         options = webdriver.ChromeOptions()
+        options.add_argument("--load-extension=Simply")
         options.add_argument("--disable-renderer-backgrounding")
         options.add_argument("--disable-backgrounding-occluded-windows")
         options.add_argument("--headless")
@@ -117,8 +118,8 @@ def scraper_function(link, result_queue):
         )
         scraped_data = {}
         simplyweb={}
-        options.add_argument("--load-extension=Simply")
-        options.add_argument(f"--user-agent={windows_user_agent}")
+       
+        #options.add_argument(f"--user-agent={windows_user_agent}")
         options.add_argument("--window-size=1920,1080")
         
 
