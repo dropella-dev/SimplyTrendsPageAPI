@@ -188,6 +188,7 @@ def scraper_function(link, result_queue):
                 base64_image = browser.get_screenshot_as_base64()
                 print(base64_image, flush=True)
                 scraped_data['screeeenchoitt'] = base64_image
+                print(a)
                 domain = WebDriverWait(browser, 5).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '#appBarContainer > div > div > p > p > a.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-1xa0emq > p')))
@@ -947,9 +948,9 @@ def scraper_function(link, result_queue):
 
     except:
         result_queue.put(scraped_data)
-        print(a)
+        #print(a)
         browser.quit()
-        print('exception')
+        print('exception', flush=True)
 
     
 def convertTuple(tup):
