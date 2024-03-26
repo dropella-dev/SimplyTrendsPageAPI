@@ -103,9 +103,9 @@ def scraper_function(link, result_queue):
         # Limit cache size
        # options.add_argument("--disk-cache-size=1")       
 
-        #options.add_argument("--disable-gpu")   
-        #options.add_argument("--prerender-from-omnibox=disabled")    
-        #options.add_argument("--disable-software-rasterizer")
+        options.add_argument("--disable-gpu")   
+        options.add_argument("--prerender-from-omnibox=disabled")    
+        options.add_argument("--disable-software-rasterizer")
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.headless = True
 
