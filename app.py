@@ -95,7 +95,7 @@ def scraper_function(link, result_queue):
        
         options = webdriver.ChromeOptions()
         current_directory = os.path.dirname(os.path.abspath(__file__))
-        options.add_argument(f'--load-extension={current_directory}/Simply')
+        options.add_argument(f'--load-extension={current_directory}/SimplyTrends')
         #options.add_argument("--load-extension=Simply")
         options.add_argument("--disable-renderer-backgrounding")
         options.add_argument("--disable-backgrounding-occluded-windows")
