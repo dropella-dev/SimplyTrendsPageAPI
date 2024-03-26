@@ -38,6 +38,7 @@ import queue
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from flask import current_app
+
 app = Flask(__name__)
 # Queue to handle requests
 request_queue = queue.Queue()
@@ -93,7 +94,9 @@ def scraper_function(link, result_queue):
     try:  
        
         options = webdriver.ChromeOptions()
-        options.add_argument("--load-extension=Simply")
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        options.add_argument(f'--load-extension={current_directory}/Simply')
+        #options.add_argument("--load-extension=Simply")
         options.add_argument("--disable-renderer-backgrounding")
         options.add_argument("--disable-backgrounding-occluded-windows")
         options.add_argument("--headless")
