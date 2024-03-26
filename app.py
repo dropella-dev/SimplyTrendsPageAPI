@@ -119,7 +119,7 @@ def scraper_function(link, result_queue):
         simplyweb={}
         options.add_argument(f"--user-agent={windows_user_agent}")
         options.add_argument("--window-size=1920,1080")
-        options.add_argument(f'--load-extension=Simply')
+        options.add_argument('--load-extension=Simply')
 
         browser = webdriver.Chrome(options=options)
 
