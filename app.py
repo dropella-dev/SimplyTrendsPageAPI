@@ -5,7 +5,7 @@ import aiohttp
 import urllib
 import urllib.parse as ul
 from webdriver_manager.chrome import ChromeDriverManager
-from seleniumwire import webdriver
+from selenium import webdriver
 import json
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
