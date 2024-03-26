@@ -1116,9 +1116,9 @@ async def instagram_stats():
     data = request.json
     account_name = data.get('account_name')
     access_key = "f2c30434bbmsh8c1a4392731f17ep119b93jsn79863bf924bf"
-    host = "robigram.p.rapidapi.com"
+    host = "scrappygram.p.rapidapi.com"
     async def get_account_media_count(account_name, retries=5):
-        url = "https://robigram.p.rapidapi.com/api/insta/andr/userinfo"
+        url = "https://scrappygram.p.rapidapi.com/api/insta/andr/userinfov1"
         querystring = {"username": f"{account_name}"}
         headers = {
             "X-RapidAPI-Key": f"{access_key}",
@@ -1141,7 +1141,7 @@ async def instagram_stats():
                 return {'media' : ''}
 
     async def get_account_followers(account_name,retries=5):
-        url = "https://robigram.p.rapidapi.com/api/insta/andr/userinfo"
+        url = "https://scrappygram.p.rapidapi.com/api/insta/andr/userinfov1"
         querystring = {"username":f"{account_name}"}
         headers = {
         "X-RapidAPI-Key": f"{access_key}",
@@ -1163,7 +1163,7 @@ async def instagram_stats():
                 return {'followers': ''}
 
     async def get_account_following(account_name,retries=5):
-        url = "https://robigram.p.rapidapi.com/api/insta/andr/userinfo"
+        url = "https://scrappygram.p.rapidapi.com/api/insta/andr/userinfov1"
         querystring = {"username":f"{account_name}"}
         headers = {
         "X-RapidAPI-Key": f"{access_key}",
@@ -1186,7 +1186,7 @@ async def instagram_stats():
 
     async def get_account_engagement_rate(account_name,num_of_media=16,retries=5):
         followers = await get_account_followers(account_name)
-        url = "https://robigram.p.rapidapi.com/api/insta/andr/scrap/allmedia"
+        url = "https://scrappygram.p.rapidapi.com/api/insta/andr/allpostscrapper"
         querystring = {"username":f"{account_name}","count":f"{num_of_media}"}
         headers = {
         "X-RapidAPI-Key": f"{access_key}",
@@ -1197,9 +1197,9 @@ async def instagram_stats():
                 async with session.get(url, headers=headers, params=querystring) as response:
                     engagements = []
                     data = await response.json()
-                    for media in data['medias']:
-                        comments = media['node']['comment_count']
-                        likes = media['node']['like_count']
+                    for media in data['data']['user']['edge_owner_to_timeline_media']['edges']:
+                        comments = media['node']['edge_media_to_comment']['count']
+                        likes = media['node']['edge_media_preview_like']['count']
                         engagements.append((comments+likes)/followers['followers'])
                     return {'Engagement':str(round((sum(engagements)/num_of_media)*100,1))+"%"}
         except Exception as e:
@@ -1212,7 +1212,7 @@ async def instagram_stats():
                 return {'Engagement': ''}
 
     async def get_account_average_likes(account_name,num_of_media=16,retries=5):
-        url = "https://robigram.p.rapidapi.com/api/insta/andr/scrap/allmedia"
+        url = "https://scrappygram.p.rapidapi.com/api/insta/andr/allpostscrapper"
         querystring = {"username":f"{account_name}","count":f"{num_of_media}"}
         headers = {
         "X-RapidAPI-Key": f"{access_key}",
@@ -1223,8 +1223,8 @@ async def instagram_stats():
                 async with session.get(url, headers=headers, params=querystring) as response:
                     data = await response.json()
                     likes = []
-                    for media in data['medias']:
-                        likes.append(media['node']['like_count'])
+                    for media in data['data']['user']['edge_owner_to_timeline_media']['edges']:
+                        likes.append(media['node']['edge_media_preview_like']['count'])
                     return {'Avg Likes': round((sum(likes))/num_of_media,1)}
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -1236,7 +1236,7 @@ async def instagram_stats():
                 return {'Avg Likes': ''}
 
     async def get_account_average_comments(account_name,num_of_media=16,retries=5):
-        url = "https://robigram.p.rapidapi.com/api/insta/andr/scrap/allmedia"
+        url = "https://scrappygram.p.rapidapi.com/api/insta/andr/allpostscrapper"
         querystring = {"username":f"{account_name}","count":f"{num_of_media}"}
         headers = {
         "X-RapidAPI-Key": f"{access_key}",
@@ -1247,8 +1247,8 @@ async def instagram_stats():
                 async with session.get(url, headers=headers, params=querystring) as response:
                     data = await response.json()
                     comments = []
-                    for media in data['medias']:
-                        comments.append(media['node']['comment_count'])
+                    for media in data['data']['user']['edge_owner_to_timeline_media']['edges']:
+                        comments.append(media['node']['edge_media_to_comment']['count'])
                     return {'Avg Comments': round((sum(comments))/num_of_media,1)}
         except Exception as e:
             print(f"An error occurred: {e}")
