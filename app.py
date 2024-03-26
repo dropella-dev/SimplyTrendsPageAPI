@@ -98,20 +98,20 @@ def scraper_function(link, result_queue):
         options.add_argument(f'--load-extension={current_directory}/SimplyTrends')
         print(current_directory,flush=True)
         #options.add_argument("--load-extension=Simply")
-        options.add_argument("--disable-renderer-backgrounding")
-        options.add_argument("--disable-backgrounding-occluded-windows")
+        #options.add_argument("--disable-renderer-backgrounding")
+        #options.add_argument("--disable-backgrounding-occluded-windows")
         options.add_argument("--headless")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
+        #options.add_argument("--no-sandbox")
+        #options.add_argument("--disable-dev-shm-usage")
        # prefs = {"profile.managed_default_content_settings.images": 2}
         #options.add_experimental_option("prefs", prefs)
         # Limit cache size
        # options.add_argument("--disk-cache-size=1")       
 
-        options.add_argument("--disable-gpu")   
-        options.add_argument("--prerender-from-omnibox=disabled")    
-        options.add_argument("--disable-software-rasterizer")
-        prefs = {"profile.managed_default_content_settings.images": 2}
+        #options.add_argument("--disable-gpu")
+        #options.add_argument("--prerender-from-omnibox=disabled")
+        #options.add_argument("--disable-software-rasterizer")
+        #prefs = {"profile.managed_default_content_settings.images": 2}
         options.headless = True
 
         options.add_experimental_option("prefs", prefs)
