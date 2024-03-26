@@ -184,10 +184,10 @@ def scraper_function(link, result_queue):
                                                 '#appBarContainer > div > div > p > p > a.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-1xa0emq > p')))
              domain_name = domain.text
             except:
-                with current_app.app_context():
-                     base64_image = browser.get_screenshot_as_base64()
-                     print(base64_image, flush=True)
-                     scraped_data['screeeenchoitt'] = json.dump({'image_base64': base64_image})
+                
+                base64_image = browser.get_screenshot_as_base64()
+                print(base64_image, flush=True)
+                scraped_data['screeeenchoitt'] = json.dump({'image_base64': base64_image})
                 domain = WebDriverWait(browser, 5).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '#appBarContainer > div > div > p > p > a.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-1xa0emq > p')))
