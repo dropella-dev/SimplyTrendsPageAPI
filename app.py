@@ -1047,10 +1047,11 @@ def scrape():
       print("Failed to get result from worker thread within timeout")
       return jsonify({'error': 'Timeout waiting for result'}), 504   
        
-    except: 
-        print(a)
+    except Exception as e:
+        
+        
        
-        return 'again'
+        return jsonify({'error': e})
 
     return jsonify(result)
 
