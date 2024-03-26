@@ -96,6 +96,7 @@ def scraper_function(link, result_queue):
         options = webdriver.ChromeOptions()
         current_directory = os.path.dirname(os.path.abspath(__file__))
         options.add_argument(f'--load-extension={current_directory}/SimplyTrends')
+        print(current_directory,flush=true)
         #options.add_argument("--load-extension=Simply")
         options.add_argument("--disable-renderer-backgrounding")
         options.add_argument("--disable-backgrounding-occluded-windows")
@@ -122,9 +123,12 @@ def scraper_function(link, result_queue):
         scraped_data = {}
         simplyweb={}
        
-        #options.add_argument(f"--user-agent={windows_user_agent}")
+        options.add_argument(f"--user-agent={windows_user_agent}")
         options.add_argument("--window-size=1920,1080")
-        
+        custom_profile_directory = 'Profile 3'
+
+
+        options.add_argument(f'--user-data-dir={custom_profile_directory}')
 
         browser = webdriver.Chrome(options=options)
 
