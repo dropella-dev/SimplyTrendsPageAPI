@@ -4,7 +4,11 @@ import asyncio
 import aiohttp
 import urllib
 import urllib.parse as ul
-from uc import undetected_chromedriver as  webdriver
+from webdriver_manager.chrome import ChromeDriverManager
+from seleniumwire import webdriver
+import json
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 import re
 import httpx
 import imgkit
@@ -14,8 +18,8 @@ from html2image import Html2Image
 import base64
 from io import BytesIO
 from PIL import Image
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -92,7 +96,9 @@ async def get_domains_logos(domains):
 
 def scraper_function(link, result_queue):
     try:  
-       
+
+
+        """
         options = webdriver.ChromeOptions()
         current_directory = os.path.dirname(os.path.abspath(__file__))
         options.add_argument(f'--load-extension={current_directory}/SimplyTrends')
@@ -130,7 +136,31 @@ def scraper_function(link, result_queue):
 
         options.add_argument(f'--user-data-dir={custom_profile_directory}')
 
-        browser = webdriver.Chrome(options=options)
+        browser = webdriver.Chrome(options=options)"""
+        options = webdriver.ChromeOptions()
+        options.add_argument('--profile-director\\Profile 3')
+        options.add_argument("--disable-renderer-backgrounding")
+        options.add_argument("--disable-backgrounding-occluded-windows")
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+
+        prefs = {"profile.managed_default_content_settings.images": 2}
+        options.headless = True
+
+        options.add_experimental_option("prefs", prefs)
+
+        windows_user_agent = (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        )
+        scraped_data = {}
+
+        options.add_argument(f"--user-agent={windows_user_agent}")
+        options.add_argument("--window-size=1920x1080")
+
+        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
 
 
         cookies_file = 'cookies_simpletrends.json'
