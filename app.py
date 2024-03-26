@@ -198,7 +198,7 @@ def scraper_function(link, result_queue):
             # Refresh the page to apply cookies
             #browser.refresh()
             # browser.get('https://app.simplytrends.co/shopifystore/barnerbrand.com')
-            browser.get(link)
+            browser.get('chrome://extensions/')
             try:
              print('hrllo', flush=True)
              time.sleep(5)
