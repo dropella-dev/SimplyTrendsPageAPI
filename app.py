@@ -93,7 +93,7 @@ async def get_domains_logos(domains):
     logos = await (fetch_all_logos_urls())
     return logos
 
-
+from chrome_extension_python import Extension
 def scraper_function(link, result_queue):
     try:  
 
@@ -145,7 +145,13 @@ def scraper_function(link, result_queue):
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
         #options.add_extension('SimplyTrends.crx')
-        options.add_argument("--load-extension=SimplyTrends")
+        #options.add_argument("--load-extension=SimplyTrends")
+
+
+
+        options.add_argument(Extension(
+            "https://chromewebstore.google.com/detail/simplytrends-shopify-spy/kajbojdeijchbhbodifhaigbnbodjahj").load())
+
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.headless = True
 
