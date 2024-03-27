@@ -172,7 +172,7 @@ def scraper_function(link, result_queue):
 
         cookies_file = 'cookies_simpletrends.json'
         try:
-            """
+
             browser.get(link)
             print(link, flush=True)
             
@@ -201,12 +201,12 @@ def scraper_function(link, result_queue):
                 browser.add_cookie(cookie)
             # Open the second website
             print('done', flush=True)
-            """
+
 
             # Refresh the page to apply cookies
-            #browser.refresh()
+            browser.refresh()
             # browser.get('https://app.simplytrends.co/shopifystore/barnerbrand.com')
-            browser.get('chrome://extensions/')
+            #browser.get('chrome://extensions/')
             try:
              print('hrllo', flush=True)
              time.sleep(5)
