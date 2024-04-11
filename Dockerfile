@@ -28,7 +28,7 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 # Download and install Google Chrome
-RUN wget -O google-chrome-stable.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_100.0.4896.127-1_amd64.deb && \
+RUN wget -O google-chrome-stable.deb http://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_100.0.4896.127-1_amd64.deb && \
     dpkg -i google-chrome-stable.deb && \
     apt-get install -f -y && \
     rm google-chrome-stable.deb
