@@ -7,56 +7,22 @@ FROM python:3.9-slim
 
 
 # Install only the essential tools and packages needed, and clean up in one layer to keep the image size small
-#RUN apt-get update && \
-#    apt-get install -y --no-install-recommends \
-#    wget \
- #   gnupg \
-#    && wget -qO - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
- #   && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
- #   && apt-get update \
- #   && apt-get install -y google-chrome-stable wkhtmltopdf \
- #   && apt-get clean \
- #   && rm -rf /var/lib/apt/lists/*
-
-# Install necessary packages
-# Start with a more lightweight base image if possible
-FROM python:3.9-slim
-
-# Install only the essential tools and packages needed, and clean up in one layer to keep the image size small
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     wget \
-    gnupg \
-    ca-certificates \
-    xdg-utils \
-    fonts-liberation \
-    libasound2 \
-    libatk-bridge2.0-0 \
-    libatk1.0-0 \
-    libatspi2.0-0 \
-    libcairo2 \
-    libcups2 \
-    libcurl4 \
-    libdbus-1-3 \
-    libdrm2 \
-    libgbm1 \
-    libglib2.0-0 \
-    libgtk-3-0 \
-    libnspr4 \
-    libnss3 \
-    libpango-1.0-0 \
-    libx11-6 \
-    libxcb1 \
-    libxcomposite1 \
-    libxdamage1 \
+   gnupg \
+    && wget -qO - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable wkhtmltopdf \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Download and install Google Chrome
-RUN wget -O google-chrome-stable.deb http://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_100.0.4896.127-1_amd64.deb && \
-    dpkg -i google-chrome-stable.deb && \
-    apt-get install -f -y && \
-    rm google-chrome-stable.deb
+# Install necessary packages
+# Start with a more lightweight base image if possible
+
+
+# Install only the essential tools and packages needed, and clean up in one layer to keep the image size small
 
 # Set the PATH environment variable
 ENV PATH /path/to/google/chrome:$PATH
