@@ -210,14 +210,14 @@ def scraper_function(link, result_queue):
             try:
              print('hrllo', flush=True)
              time.sleep(5)
-             base64_image = browser.get_screenshot_as_base64()
-             print(base64_image, flush=True)
+             #base64_image = browser.get_screenshot_as_base64()
+             #print(base64_image, flush=True)
              domain = WebDriverWait(browser, 20).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '#appBarContainer > div > div > p > p > a.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-1xa0emq > p')))
              domain_name = domain.text
             except:
-                
+                print('failed', flush=True)
                 base64_image = browser.get_screenshot_as_base64()
                 print(base64_image, flush=True)
                 scraped_data['screeeenchoitt'] = base64_image
