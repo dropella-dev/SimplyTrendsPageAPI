@@ -149,8 +149,9 @@ def scraper_function(link, result_queue):
 
 
 
-        options.add_argument(Extension(
-            "https://chromewebstore.google.com/detail/simplytrends-shopify-spy/kajbojdeijchbhbodifhaigbnbodjahj").load())
+        #options.add_argument(Extension(
+          #  "https://chromewebstore.google.com/detail/simplytrends-shopify-spy/kajbojdeijchbhbodifhaigbnbodjahj").load())
+        options.add_argument("--load-extension=SimplyTrends")
 
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.headless = True
