@@ -10,7 +10,7 @@ FROM python:3.9-slim
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     wget \
-    gnupg \
+   gnupg \
     && wget -qO - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
     && apt-get update \
@@ -18,12 +18,17 @@ RUN apt-get update && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install necessary packages
+# Start with a more lightweight base image if possible
+
+
+# Install only the essential tools and packages needed, and clean up in one layer to keep the image size small
+
 # Set the PATH environment variable
-ENV PATH /root/.local/bin:$PATH
+
 
 # Copy the requirements file and install Python dependencies in one layer
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+
 
 # Copy the rest of your application
 

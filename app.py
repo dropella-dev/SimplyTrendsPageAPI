@@ -131,10 +131,10 @@ def scraper_function(link, result_queue):
        
         options.add_argument(f"--user-agent={windows_user_agent}")
         options.add_argument("--window-size=1920,1080")
-        custom_profile_directory = '\\Profile 3'
+        #custom_profile_directory = '\\Profile 3'
 
 
-        options.add_argument(f'--user-data-dir={custom_profile_directory}')
+        #options.add_argument(f'--user-data-dir={custom_profile_directory}')
 
         browser = webdriver.Chrome(options=options)"""
         options = webdriver.ChromeOptions()
@@ -149,8 +149,9 @@ def scraper_function(link, result_queue):
 
 
 
-        options.add_argument(Extension(
-            "https://chromewebstore.google.com/detail/simplytrends-shopify-spy/kajbojdeijchbhbodifhaigbnbodjahj").load())
+        #options.add_argument(Extension(
+          #  "https://chromewebstore.google.com/detail/simplytrends-shopify-spy/kajbojdeijchbhbodifhaigbnbodjahj").load())
+        options.add_argument("--load-extension=SimplyTrends")
 
         prefs = {"profile.managed_default_content_settings.images": 2}
         options.headless = True
@@ -232,15 +233,15 @@ def scraper_function(link, result_queue):
             #browser.get('chrome://extensions/')
             try:
              print('hrllo', flush=True)
-             time.sleep(5)
-             base64_image = browser.get_screenshot_as_base64()
-             print(base64_image, flush=True)
-             domain = WebDriverWait(browser, 20).until(
+             #time.sleep(5)
+             #base64_image = browser.get_screenshot_as_base64()
+             #print(base64_image, flush=True)
+             domain = WebDriverWait(browser, 15).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR,
                                                 '#appBarContainer > div > div > p > p > a.MuiTypography-root.MuiTypography-inherit.MuiLink-root.MuiLink-underlineHover.css-1xa0emq > p')))
              domain_name = domain.text
             except:
-                
+                print('failed', flush=True)
                 base64_image = browser.get_screenshot_as_base64()
                 print(base64_image, flush=True)
                 scraped_data['screeeenchoitt'] = base64_image
@@ -1179,171 +1180,122 @@ def CaptureLandingPageScreenshot():
 @app.route("/ScrapeStoreStats", methods=['POST'])
 async def instagram_stats():
     data = request.json
-    account_name = data.get('account_name')
-    access_key = "f2c30434bbmsh8c1a4392731f17ep119b93jsn79863bf924bf"
-    host = "scrappygram.p.rapidapi.com"
-    async def get_account_media_count(account_name, retries=5):
-        url = "https://scrappygram.p.rapidapi.com/api/insta/andr/userinfov1"
-        querystring = {"username": f"{account_name}"}
-        headers = {
-            "X-RapidAPI-Key": f"{access_key}",
-            "X-RapidAPI-Host": f"{host}"
-                }
+    profile_link = data.get('profile_link')
+    headers = {
+    "X-RapidAPI-Key": "f2c30434bbmsh8c1a4392731f17ep119b93jsn79863bf924bf",
+    "X-RapidAPI-Host": "scrappygram.p.rapidapi.com"
+    }
+    def user_info_requests(url):
+        user_info_url = "https://scrappygram.p.rapidapi.com/api/insta/andr/userinfov1"
+        querystring = {"profilelink": url}
+        for _ in range(5):
+            try:
+                response = requests.get(user_info_url, headers=headers, params=querystring)
+                if response.status_code == 200 and len(response.content) > 0:
+                    data = response.json()
+                    return data
+            except:
+                pass
+    def user_media_requests(url):
+        user_media_url = "https://scrappygram.p.rapidapi.com/api/insta/andr/allpostscrapper"
+        querystring = {"profilelink": url, "count":"16"}
+        for _ in range(5):
+            try:
+                response = requests.get(user_media_url, headers=headers, params=querystring)
+                if response.status_code == 200 and len(response.content) > 0:
+                    data = response.json()
+                    return data
+            except:
+                pass
+    user_info_raw_data = user_info_requests(profile_link)
+    user_media_raw_data = user_media_requests(profile_link)
 
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, headers=headers, params=querystring) as response:
-                    response_json = await response.json()
-                    media_count = response_json['edge_owner_to_timeline_media']['count']
-                    return {'media' : media_count}
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            if retries > 0:
-                print(f"Retrying... ({retries} retries left)")
-                return await get_account_media_count(account_name, retries=retries-1)
-            else:
-                print("All retries exhausted.")
+    async def get_account_media_count(data):
+        if len(data) == 0:
+            return {'media' : ''}
+        else:
+            try:
+                media_count = data['edge_owner_to_timeline_media']['count']
+                return {'media' : media_count}
+            except:
                 return {'media' : ''}
-
-    async def get_account_followers(account_name,retries=5):
-        url = "https://scrappygram.p.rapidapi.com/api/insta/andr/userinfov1"
-        querystring = {"username":f"{account_name}"}
-        headers = {
-        "X-RapidAPI-Key": f"{access_key}",
-        "X-RapidAPI-Host": f"{host}"
-        }
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, headers=headers, params=querystring) as response:
-                    response_json = await response.json()
-                    followers = response_json['edge_followed_by']['count']
-                    return {'followers': followers}
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            if retries > 0:
-                print(f"Retrying... ({retries} retries left)")
-                return await get_account_followers(account_name, retries=retries-1)
-            else:
-                print("All retries exhausted.")
+    async def get_account_followers(data):
+        if len(data) == 0:
+            return {'followers': ''}
+        else:
+            try:
+                followers = data['edge_followed_by']['count']
+                return {'followers': followers}
+            except:
                 return {'followers': ''}
-
-    async def get_account_following(account_name,retries=5):
-        url = "https://scrappygram.p.rapidapi.com/api/insta/andr/userinfov1"
-        querystring = {"username":f"{account_name}"}
-        headers = {
-        "X-RapidAPI-Key": f"{access_key}",
-        "X-RapidAPI-Host": f"{host}"
-        }
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, headers=headers, params=querystring) as response:
-                    response_json = await response.json()
-                    following = response_json['edge_follow']['count']
-                    return {'following': following}
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            if retries > 0:
-                print(f"Retrying... ({retries} retries left)")
-                return await get_account_following(account_name, retries=retries-1)
-            else:
-                print("All retries exhausted.")
+    async def get_account_following(data):
+        if len(data) == 0:
+            return {'following': ''}
+        else:
+            try:
+                following = data['edge_follow']['count']
+                return {'following': following}
+            except:
                 return {'following': ''}
-
-    async def get_account_engagement_rate(account_name,num_of_media=16,retries=5):
-        followers = await get_account_followers(account_name)
-        url = "https://scrappygram.p.rapidapi.com/api/insta/andr/allpostscrapper"
-        querystring = {"username":f"{account_name}","count":f"{num_of_media}"}
-        headers = {
-        "X-RapidAPI-Key": f"{access_key}",
-        "X-RapidAPI-Host": f"{host}"
-        }
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, headers=headers, params=querystring) as response:
-                    engagements = []
-                    data = await response.json()
-                    for media in data['data']['user']['edge_owner_to_timeline_media']['edges']:
-                        comments = media['node']['edge_media_to_comment']['count']
-                        likes = media['node']['edge_media_preview_like']['count']
-                        engagements.append((comments+likes)/followers['followers'])
-                    return {'Engagement':str(round((sum(engagements)/num_of_media)*100,1))+"%"}
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            if retries > 0:
-                print(f"Retrying... ({retries} retries left)")
-                return await get_account_engagement_rate(account_name, num_of_media, retries=retries-1)
-            else:
-                print("All retries exhausted.")
-                return {'Engagement': ''}
-
-    async def get_account_average_likes(account_name,num_of_media=16,retries=5):
-        url = "https://scrappygram.p.rapidapi.com/api/insta/andr/allpostscrapper"
-        querystring = {"username":f"{account_name}","count":f"{num_of_media}"}
-        headers = {
-        "X-RapidAPI-Key": f"{access_key}",
-        "X-RapidAPI-Host": f"{host}"
-        }
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, headers=headers, params=querystring) as response:
-                    data = await response.json()
-                    likes = []
-                    for media in data['data']['user']['edge_owner_to_timeline_media']['edges']:
-                        likes.append(media['node']['edge_media_preview_like']['count'])
-                    return {'Avg Likes': round((sum(likes))/num_of_media,1)}
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            if retries > 0:
-                print(f"Retrying... ({retries} retries left)")
-                return await get_account_average_likes(account_name, num_of_media, retries=retries-1)
-            else:
-                print("All retries exhausted.")
-                return {'Avg Likes': ''}
-
-    async def get_account_average_comments(account_name,num_of_media=16,retries=5):
-        url = "https://scrappygram.p.rapidapi.com/api/insta/andr/allpostscrapper"
-        querystring = {"username":f"{account_name}","count":f"{num_of_media}"}
-        headers = {
-        "X-RapidAPI-Key": f"{access_key}",
-        "X-RapidAPI-Host": f"{host}"
-        }
-        try:
-            async with aiohttp.ClientSession() as session:
-                async with session.get(url, headers=headers, params=querystring) as response:
-                    data = await response.json()
-                    comments = []
-                    for media in data['data']['user']['edge_owner_to_timeline_media']['edges']:
-                        comments.append(media['node']['edge_media_to_comment']['count'])
-                    return {'Avg Comments': round((sum(comments))/num_of_media,1)}
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            if retries > 0:
-                print(f"Retrying... ({retries} retries left)")
-                return await get_account_average_comments(account_name, num_of_media, retries=retries-1)
-            else:
-                print("All retries exhausted.")
-                return {'Avg Comments': ''}
+    async def get_account_engagement_rate(data,user_info_data):
+        followers = await get_account_followers(user_info_data)
+        followers = followers['followers']
+        if len(data) == 0:
+            return {'engagement rate': ''}
+        else:
+            try:
+                engagements = []
+                for media in data['data']['user']['edge_owner_to_timeline_media']['edges']:
+                    comments = media['node']['edge_media_to_comment']['count']
+                    likes = media['node']['edge_media_preview_like']['count']
+                    engagements.append((comments+likes)/followers)
+                
+                return {'engagement rate': str(round((sum(engagements)/16)*100,1))+"%"}
+            except:
+                return {'engagement rate': ''}
+    async def get_account_average_likes(data):
+        if len(data) == 0:
+            return {'avg likes': ''}
+        else:
+            try:
+                likes = []
+                for media in data['data']['user']['edge_owner_to_timeline_media']['edges']:
+                    likes.append(media['node']['edge_media_preview_like']['count'])
+                return {'avg likes': round((sum(likes))/16,1)}
+            except:
+                return {'avg likes': ''}
+    async def get_account_average_comments(data):
+        if len(data) == 0:
+            return {'avg comments': ''}
+        else:
+            try:
+                comments = []
+                for media in data['data']['user']['edge_owner_to_timeline_media']['edges']:
+                    comments.append(media['node']['edge_media_to_comment']['count'])
+                return {'avg comments': round((sum(comments))/16,1)}
+            except:
+                return {'avg comments': ''}
 
     tasks = [
-        get_account_media_count(account_name),
-        get_account_followers(account_name),
-        get_account_following(account_name),
-        get_account_engagement_rate(account_name),
-        get_account_average_likes(account_name),
-        get_account_average_comments(account_name)
+        get_account_media_count(user_info_raw_data),
+        get_account_followers(user_info_raw_data),
+        get_account_following(user_info_raw_data),
+        get_account_engagement_rate(user_media_raw_data,user_info_raw_data),
+        get_account_average_likes(user_media_raw_data),
+        get_account_average_comments(user_media_raw_data)
     ]
     results = await asyncio.gather(*tasks)
     
     response = {
-        'account_name': account_name,
+        'account_name': profile_link,
         'media_count': str(results[0]['media']),
         'followers': str(results[1]['followers']),
         'following': str(results[2]['following']),
-        'engagement_rate': results[3]['Engagement'],
-        'average_likes': str(results[4]['Avg Likes']),
-        'average_comments': str(results[5]['Avg Comments'])
+        'engagement_rate': results[3]['engagement rate'],
+        'average_likes': str(results[4]['avg likes']),
+        'average_comments': str(results[5]['avg comments'])
     }
     return response
-
+    
 if __name__ == '__main__':
     app.run(debug=True)
