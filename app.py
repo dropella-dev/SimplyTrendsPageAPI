@@ -173,29 +173,7 @@ def scraper_function(link, result_queue):
 
         cookies_file = 'cookies_simpletrends.json'
         try:
-            driver.get('https://robwu.nl/s/chrome.webstore.install-demo.html')
-
-            text_after_install = 'The extension has been installed.'
-
-            try:
-                # Wait until button is visible
-                # http://selenium-python.readthedocs.org/en/latest/waits.html
-                button = WebDriverWait(driver, 3).until(
-                    EC.visibility_of_element_located((By.ID, 'install-extension')))
-                assert button.text != text_after_install, \
-                    'The extension should be disabled before running the test'
-                print('Triggering inline install.')
-                button.click()
-
-                print('Waiting until completion of installation.')
-                # Check whether the extension is installed, by verifying that the
-                # button's text equals |text_after_install|.
-                locator = (By.ID, 'install-extension')
-                button = WebDriverWait(driver, 10).until(
-                    lambda driver: button.text == text_after_install)
-                print('Button found, test passed!')
-            except Exception as e:
-                print(e, flush=True)
+            
 
             browser.get(link)
             print(link, flush=True)
