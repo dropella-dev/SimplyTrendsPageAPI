@@ -5,7 +5,7 @@ import aiohttp
 import urllib
 import urllib.parse as ul
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium import webdriver
+from uc import undetected_chromedriver as webdriver
 import json
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
@@ -167,8 +167,8 @@ def scraper_function(link, result_queue):
         options.add_argument(f"--user-agent={windows_user_agent}")
         options.add_argument("--window-size=1920x1080")
 
-        browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
+        #browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        browser = webdriver.Chrome(options=options)
 
 
         cookies_file = 'cookies_simpletrends.json'
