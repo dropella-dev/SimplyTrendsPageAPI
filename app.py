@@ -18,7 +18,7 @@ from html2image import Html2Image
 import base64
 from io import BytesIO
 from PIL import Image
-from datetime import datetime
+
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -1073,76 +1073,92 @@ def thread_function(cookies_file, file_path_follow, file_path_like, file_path_co
     except Exception as e:
         print(str(e))
         browser.quit()
+
 # Main execution
 
 
-def CaptureLandingPageScreenshot(domain, queue):
-        # options = webdriver.ChromeOptions()    
-        # options.add_argument("--disable-renderer-backgrounding")
-        # options.add_argument("--disable-backgrounding-occluded-windows")
-        # options.add_argument("--headless")
-        # options.add_argument("--no-sandbox")
-        # options.add_argument("--disable-dev-shm-usage")
-        # options.add_argument("--disk-cache-size=1")    
-        # options.add_argument("--disable-gpu")   
-        # options.add_argument("--prerender-from-omnibox=disabled")    
-        # options.add_argument("--disable-software-rasterizer")
-        # options.add_argument("--hide-scrollbars")
-        # options.headless = True
-        # windows_user_agent = (
-        #     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-        # "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-        # )
-        # options.add_argument(f"--user-agent={windows_user_agent}")
-        # options.add_argument("--window-size=1080x720")
-        # browser = webdriver.Chrome(options=options)
+@app.route('/scrape', methods=['POST'])
+def scrape():
+    link = request.json.get('link')
+    result_queue = queue.Queue()
 
-        try:
-            # url = 'https://'+domain
-            # browser.get(url)
-            # base64_image = browser.get_screenshot_as_base64()
-            # browser.quit()
-            # queue.put(base64_image)
-            queue.put("")
-            return
-        except Exception as e:
-            queue.put("")
-def similar_web(domain, queue):
-        url = "https://similarweb12.p.rapidapi.com/v2/website-analytics/"
-        querystring = {"domain": domain}
-        headers = {
-            'X-RapidAPI-Key': "2f5b0dee51msh47a4e9364d8b93fp13c2b6jsn52cfc6d849dc",
-            'X-RapidAPI-Host': "similarweb12.p.rapidapi.com",
-            'Content-Type': "application/x-www-form-urlencoded"
-                }
-        for _ in range(5):
-            try:
-                response = requests.request("GET", url, headers=headers, params=querystring)
-                if response.status_code == 200 and len(response.content)>1:
-                    response = response.json()
-                    queue.put(response)
-                    return
-                    #return response
-            except:
-                pass
-def ScrapeProductsImages(domain,queue):
-        store = domain.replace(".com", "").strip()
-        search_term = store + "products"
-        url = 'https://www.google.com/search?q={0}&tbm=isch'.format(search_term)
-        try:
-            content = httpx.get(url).content
-        except:
-            return jsonify({"response":"Exception occured while requesting the resource from Google Images!"})
-        soup = BeautifulSoup(content,'lxml')
-        images = soup.findAll('img')
-        products_urls = []
-        for image in images:
-            products_urls.append(image.get('src'))
-        queue.put(products_urls)
-        return
-        #return jsonify(products_urls)
+    # Start a new thread for each scraping request
+    try:
+    
+     thread = threading.Thread(target=scraper_function, args=(link, result_queue))
+     thread.start()
+     
+    # Wait for the result
+     try:
+      result = result_queue.get(timeout=60)  # Adjust timeout as necessary
+     except queue.Empty:
+      # Handle the case where no result is produced within the timeout period
+      print("Failed to get result from worker thread within timeout")
+      return jsonify({'error': 'Timeout waiting for result'}), 504   
+       
+    except Exception as e:
+        
+        
+       
+        return jsonify({'error': e})
 
-async def instagram_stats(profile_link):
+    return jsonify(result)
+
+@app.route('/ScrapeProductsImages', methods=['POST'])
+def ScrapeProductsImages():
+    data = request.json
+    search_term = data.get('search_term')
+    url = 'https://www.google.com/search?q={0}&tbm=isch'.format(search_term)
+    try:
+        content = httpx.get(url).content
+    except:
+        return jsonify({"response":"Exception occured while requesting the resource from Google Images!"})
+    soup = BeautifulSoup(content,'lxml')
+    images = soup.findAll('img')
+    products_urls = []
+    for image in images:
+        products_urls.append(image.get('src'))
+    return jsonify(products_urls)
+
+
+@app.route('/CaptureLandingPageScreenshot', methods=['POST'])
+def CaptureLandingPageScreenshot():
+    data = request.json
+    domain = data.get('domain')
+    options = webdriver.ChromeOptions()    
+    options.add_argument("--disable-renderer-backgrounding")
+    options.add_argument("--disable-backgrounding-occluded-windows")
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disk-cache-size=1")    
+    options.add_argument("--disable-gpu")   
+    options.add_argument("--prerender-from-omnibox=disabled")    
+    options.add_argument("--disable-software-rasterizer")
+    options.add_argument("--hide-scrollbars")
+    options.headless = True
+    windows_user_agent = (
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    )
+    options.add_argument(f"--user-agent={windows_user_agent}")
+    options.add_argument("--window-size=1080x720")
+
+    browser = webdriver.Chrome(options=options)
+
+    try:
+        url = 'https://'+domain
+        browser.get(url)
+        base64_image = browser.get_screenshot_as_base64()
+        browser.quit()
+        return jsonify({'image_base64': base64_image})
+    except Exception as e:
+        return jsonify({'image_base64': ''})
+
+@app.route("/ScrapeStoreStats", methods=['POST'])
+async def instagram_stats():
+    data = request.json
+    profile_link = data.get('profile_link')
     headers = {
     "X-RapidAPI-Key": "f2c30434bbmsh8c1a4392731f17ep119b93jsn79863bf924bf",
     "X-RapidAPI-Host": "scrappygram.p.rapidapi.com"
@@ -1150,7 +1166,7 @@ async def instagram_stats(profile_link):
     def user_info_requests(url):
         user_info_url = "https://scrappygram.p.rapidapi.com/api/insta/andr/userinfov1"
         querystring = {"profilelink": url}
-        for _ in range(15):
+        for _ in range(5):
             try:
                 response = requests.get(user_info_url, headers=headers, params=querystring)
                 if response.status_code == 200 and len(response.content) > 0:
@@ -1161,7 +1177,7 @@ async def instagram_stats(profile_link):
     def user_media_requests(url):
         user_media_url = "https://scrappygram.p.rapidapi.com/api/insta/andr/allpostscrapper"
         querystring = {"profilelink": url, "count":"16"}
-        for _ in range(15):
+        for _ in range(5):
             try:
                 response = requests.get(user_media_url, headers=headers, params=querystring)
                 if response.status_code == 200 and len(response.content) > 0:
@@ -1171,6 +1187,7 @@ async def instagram_stats(profile_link):
                 pass
     user_info_raw_data = user_info_requests(profile_link)
     user_media_raw_data = user_media_requests(profile_link)
+
     async def get_account_media_count(data):
         if len(data) == 0:
             return {'media' : ''}
@@ -1236,6 +1253,7 @@ async def instagram_stats(profile_link):
                 return {'avg comments': round((sum(comments))/16,1)}
             except:
                 return {'avg comments': ''}
+
     tasks = [
         get_account_media_count(user_info_raw_data),
         get_account_followers(user_info_raw_data),
@@ -1256,321 +1274,6 @@ async def instagram_stats(profile_link):
         'average_comments': str(results[5]['avg comments'])
     }
     return response
-
-
-@app.route('/scrape', methods=['POST'])
-def scrape():
-    def extract_domain(link):
-        return link.replace("https://app.simplytrends.co/shopifystore/", "").replace("?page_tab=overview","").strip()
-    def construct_products_query(link):
-        return link.replace("https://app.simplytrends.co/shopifystore/", "").replace(".com?page_tab=overview","").strip() + " products"
-    link = request.json.get('link')
-    
-    sw_queue = queue.Queue()
-    products_images_queue = queue.Queue()
-    landing_page_image_queue = queue.Queue()
-    st_queue = queue.Queue()
-    sw_results = ''
-    products_images_results = ''
-    landing_page_image_results = ''
-    st_results = ''
-    sw_link = extract_domain(link)
-    products_images_link = construct_products_query(link)
-    landing_page_image_link = extract_domain(link)
-    try:
-        sw_thread = threading.Thread(target=similar_web, args=(sw_link,sw_queue))
-        products_images_thread = threading.Thread(target=ScrapeProductsImages, args=(products_images_link,products_images_queue))
-        landing_page_image_thread = threading.Thread(target=CaptureLandingPageScreenshot, args=(landing_page_image_link,landing_page_image_queue))
-        scraper_thread = threading.Thread(target=scraper_function, args=(link, st_queue))
-        sw_thread.start()
-        products_images_thread.start()
-        landing_page_image_thread.start()
-        scraper_thread.start()
-        sw_thread.join()
-        products_images_thread.join()
-        landing_page_image_thread.join()
-        scraper_thread.join()
-        try:
-            sw_results = sw_queue.get(timeout=10)
-        except:
-            pass
-        try:
-            products_images_results = products_images_queue.get(timeout=10)
-        except:
-            pass
-        try:
-            landing_page_image_results  = landing_page_image_queue.get(timeout=10)
-        except:
-            pass
-        try:
-            st_results = st_queue.get(timeout=10) 
-        except:
-            pass 
-        # except:
-        #     print("Failed to get result from worker thread within timeout")
-        #     return jsonify({'error': 'Timeout waiting for result'}), 504 
-
-    except Exception as e: 
-        print(e)
-        return 'again'
-
-    # sw_results = similar_web(link)
-    # products_images_results = ScrapeProductsImages(link)
-    # landing_page_image = CaptureLandingPageScreenshot(link)
-    # result_queue = queue.Queue()
-    # st_results = ''
-    # try:
-    #     thread = threading.Thread(target=scraper_function, args=(link, result_queue))
-    #     thread.start()
-     
-    #     try:
-    #         result = result_queue.get(timeout=60)  
-    #         st_results = result
-    #     except queue.Empty:
-    #         print("Failed to get result from worker thread within timeout")
-    #         return jsonify({'error': 'Timeout waiting for result'}), 504   
-       
-    # except: 
-    #     print(a)
-    #     return 'again'
-    store_info = {}
-    try:
-        store_info['product_images'] = products_images_results[:10]
-    except:
-        store_info['product_images'] = []
-    def get_instagram(links):
-        for link in links:
-            if 'instagram' in link:
-                return link
-    media_stats = asyncio.run(instagram_stats(get_instagram(st_results['socialmedia'])))
-    try:
-        store_info['store_name'] = sw_results['overview']['companyName']
-    except:
-        try:
-            store_info['store_name'] = st_results.companyName
-        except:
-            store_info['store_name'] = "-"
-    def chatgpt_prompt_1(store_name):
-        pass
-    # try:
-    #     store_info['Store description'] = 
-    try:
-        store_info['store_link'] = "https://www."+sw_results['domain']
-    except:
-        try:
-            store_info['store_link'] = "https://www."+st_results['domain_name']
-        except:
-            store_info['store_link'] = "-"
-    def convert_number_to_approximate(number):
-        if isinstance(number, str):
-            number = int(number.replace(",", ""))
-        if number >= 1000000000:
-            return f"{number / 1000000000:.1f}B"
-        elif number >= 1000000:
-            return f"{number / 1000000:.1f}M"
-        elif number >= 1000:
-            return f"{number / 1000:.1f}K"
-        else:
-            return str(number)
-    try:
-        store_info['global_store_rank'] = convert_number_to_approximate(sw_results['overview']['globalRank'])
-    except:
-        try:
-            store_info['global_store_rank'] = convert_number_to_approximate(st_results['Global_rank'][0])
-        except:
-            store_info['global_store_rank'] = "-"
-    try:
-        store_info['country_rank'] = convert_number_to_approximate(sw_results['overview']['countryRank'])
-    except:
-        try:
-            store_info['country_rank'] = convert_number_to_approximate(st_results['countryrank'])
-        except:
-            store_info['country_rank'] = "-"
-    try:
-        store_info['pages_per_visit'] = "{:.4f}".format(sw_results['overview']['pagesPerVisit'])
-    except:
-        try:
-            store_info['pages_per_visit'] = "{:.4f}".format(st_results['pagespervisit'])
-        except:
-            store_info['pages_per_visit'] = "-"
-    try:
-        store_info['average_visit_stay'] = sw_results['traffic']['visitsAvgDurationFormatted']
-    except:
-        try:
-            store_info['average_visit_stay'] = st_results['avgvisitduration']
-        except:
-            store_info['average_visit_stay'] = "-"
-    try:
-        store_info['stores_country'] = st_results['country']
-    except:
-        store_info['stores_country'] = "-"
-    try:
-        store_info['store_creation_year'] = datetime.strptime(st_results['firstpublishproduct'], '%B %d, %Y').year
-    except:
-        store_info['store_creation_year'] = "-"
-    try:
-        store_info['total_visits'] = st_results['monthlyvisits']
-    except:
-        store_info['total_visits'] = "-"
-    try:
-        store_info['bounce_rate'] = st_results['bouncertate']
-    except:
-        store_info['bounce_rate'] = "-"
-    try:
-        store_info['category_rank'] = convert_number_to_approximate(sw_results['overview']['categoryRank'])
-    except:
-        try:
-            store_info['category_rank'] = convert_number_to_approximate(st_results['categoryyrank'])
-        except:
-            store_info['category_rank'] = "-"
-    def messy_data_formatting(data):
-        return data.replace("/", " > ").replace("_", " ")
-    try:
-        store_info['hierarchical_categories'] = messy_data_formatting(sw_results['outgoingReferrals']['topOutgoingCategories'][0]['category'])
-    except:
-        store_info['hierarchical_categories'] =  "-"
-    try:
-        store_info['landing_page_image'] = landing_page_image_results
-    except:
-        store_info['landing_page_image'] = "-"
-    try:
-        store_info['total_products'] = st_results['numproducts']
-    except:
-        store_info['total_products'] = "-"
-    try:
-        store_info['store_creation_date'] = st_results['firstpublishproduct']
-    except:
-        store_info['store_creation_date'] = "-"
-    try:
-        store_info['average_price'] = st_results['avgprices'].split("(")[0]
-    except:
-        store_info['average_price'] = "-"
-    try:
-        store_info['average_likes'] = media_stats['average_likes']
-    except:
-        store_info['average_likes'] = "-"
-    try:
-        store_info['total_followers'] = media_stats['followers']
-    except:
-        store_info['total_followers'] = "-"
-    try:
-        store_info['total_following'] = media_stats['following']
-    except:
-        store_info['total_following'] = "-"
-    try:
-        store_info['total_posts'] = media_stats['media_count']
-    except:
-        store_info['total_posts'] = "-"
-    try:
-        store_info['average_comments'] = media_stats['average_comments']
-    except:
-        store_info['average_comments'] = "-"
-    try:
-        store_info['total_traffic'] = convert_number_to_approximate(sw_results['traffic']['visitsTotalCount'])
-    except:
-        store_info['total_traffic'] = "-"
-    try:
-        store_info['engagement_stats'] = media_stats['engagement_rate']
-    except:
-        store_info['engagement_stats'] = "-"
-    def get_top_countries(stats):
-        return [country['Country_Name'] for country in stats]
-    try:
-        store_info['top_countries'] = get_top_countries(st_results['data_countryvisits'])
-    except:
-        store_info['top_countries'] = "-"
-    try:
-        store_info['male_gender_percentage'] =  next((item['male'] for item in st_results['data_malefepercent'] if 'male' in item), None)
-    except:
-        store_info['male_gender_percentage'] = "-"
-    try:
-        store_info['female_gender_percentage'] = next((item['female'] for item in st_results['data_malefepercent'] if 'female' in item), None)
-    except:
-        store_info['female_gender_percentage'] = "-"
-    def age_groups_distribution(data):
-        sorted_age_distribution = sorted(data['demographics']['ageDistribution'], key=lambda x: x['minAge'])
-        result = []
-        for age_group_data in sorted_age_distribution:
-            age_group = ''
-            if age_group_data['maxAge'] is not None:
-                age_group = str(age_group_data['minAge']) + " - " + str(age_group_data['maxAge'])
-            else:
-                age_group = str(age_group_data['minAge']) + "+"
-        
-            percentage_string = "{:.2f}".format(age_group_data['value'])
-            percentage = float(percentage_string) * 100
-        
-            result.append({
-            'age_group_label': age_group,
-            'percentage_string': percentage_string,
-            'percentage': percentage
-        })
-        return result
-
-    try:
-        store_info['age_groups_distribution'] = age_groups_distribution(sw_results)
-    except:
-        store_info['age_groups_distribution'] = "-"
-    try:
-        store_info['top_categories'] = sw_results['interests']['topInterestedCategories']
-    except:
-        try:
-            store_info['top_categories'] = st_results['Top_5_popular_categories']
-        except:
-            store_info['top_categories'] = "-"
-    try:
-        store_info['other_similar_stores'] = sw_results['competitors']['topSimilarityCompetitors']
-    except:
-        store_info['other_similar_stores'] = "-"
-    try:
-        store_info['other_topics'] = sw_results['interests']['topInterestedTopics']
-    except:
-        try:
-            store_info['other_topics'] = st_results['Top_5_hot_topic']
-        except:
-            store_info['other_topics'] = "-"
-    def process_social_networks(data):
-
-        top_social_networks = data['socialNetworksSource']['topSocialNetworks']
-        total_visits_count = data['traffic']['visitsTotalCount']
-        result = []
-
-        for network in top_social_networks:
-            percentage_number = network['visitsShare'] * 100
-            percentage = float("{:.2f}".format(percentage_number))
-            value = convert_number_to_approximate(percentage_number * total_visits_count)
-
-            result.append({
-            'name': network['name'],
-            'percentage': percentage,
-            'value': value,
-            'icon': network['icon']
-                })
-
-        return result
-    try:
-        store_info['marketing_channels_distribution'] = process_social_networks(sw_results)
-    except:
-        store_info['marketing_channels_distribution'] = "-"
-    try:
-        store_info['top_keywords'] = sw_results['searchesSource']['topKeywords']
-    except:
-        store_info['top_keywords'] = "-"
-    try:
-        store_info['keywords_count'] = sw_results['searchesSource']['keywordsTotalCount']
-    except:
-        store_info['keywords_count'] = "-"
-    try:
-        store_info['organic_traffic_percentage'] = sw_results['searchesSource']['organicSearchShare']
-    except:
-        store_info['organic_traffic_percentage'] = "-"
-    try:
-        store_info['paid_traffic_percentage'] = sw_results['searchesSource']['paidSearchShare']
-    except:
-        store_info['paid_traffic_percentage'] = "-"
-    return jsonify(store_info)
-
-    
     
 if __name__ == '__main__':
     app.run(debug=True)
