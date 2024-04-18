@@ -1077,37 +1077,36 @@ def thread_function(cookies_file, file_path_follow, file_path_like, file_path_co
 
 
 def CaptureLandingPageScreenshot(domain, queue):
-        options = webdriver.ChromeOptions()    
-        options.add_argument("--disable-renderer-backgrounding")
-        options.add_argument("--disable-backgrounding-occluded-windows")
-        options.add_argument("--headless")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--disk-cache-size=1")    
-        options.add_argument("--disable-gpu")   
-        options.add_argument("--prerender-from-omnibox=disabled")    
-        options.add_argument("--disable-software-rasterizer")
-        options.add_argument("--hide-scrollbars")
-        options.headless = True
-        windows_user_agent = (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-        )
-        options.add_argument(f"--user-agent={windows_user_agent}")
-        options.add_argument("--window-size=1080x720")
-        browser = webdriver.Chrome(options=options)
+        # options = webdriver.ChromeOptions()    
+        # options.add_argument("--disable-renderer-backgrounding")
+        # options.add_argument("--disable-backgrounding-occluded-windows")
+        # options.add_argument("--headless")
+        # options.add_argument("--no-sandbox")
+        # options.add_argument("--disable-dev-shm-usage")
+        # options.add_argument("--disk-cache-size=1")    
+        # options.add_argument("--disable-gpu")   
+        # options.add_argument("--prerender-from-omnibox=disabled")    
+        # options.add_argument("--disable-software-rasterizer")
+        # options.add_argument("--hide-scrollbars")
+        # options.headless = True
+        # windows_user_agent = (
+        #     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        # "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        # )
+        # options.add_argument(f"--user-agent={windows_user_agent}")
+        # options.add_argument("--window-size=1080x720")
+        # browser = webdriver.Chrome(options=options)
 
         try:
-            url = 'https://'+domain
-            browser.get(url)
-            base64_image = browser.get_screenshot_as_base64()
-            browser.quit()
-            queue.put(base64_image)
+            # url = 'https://'+domain
+            # browser.get(url)
+            # base64_image = browser.get_screenshot_as_base64()
+            # browser.quit()
+            # queue.put(base64_image)
+            queue.put("")
             return
-            #return jsonify({'image_base64': base64_image})
         except Exception as e:
             queue.put("")
-            #return jsonify({'image_base64': ''})
 def similar_web(domain, queue):
         url = "https://similarweb12.p.rapidapi.com/v2/website-analytics/"
         querystring = {"domain": domain}
