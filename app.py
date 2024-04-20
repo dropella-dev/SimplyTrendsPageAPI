@@ -1556,7 +1556,7 @@ def scrape():
         store_info['paid_traffic_percentage'] = sw_results['searchesSource']['paidSearchShare']
     except:
         store_info['paid_traffic_percentage'] = "-"
-    return jsonify(store_info)
+    return jsonify(st_results)
 
 
     
