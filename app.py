@@ -1290,7 +1290,6 @@ def scrape():
     sw_results = ''
     products_images_results = ''
     landing_page_image_results = ''
-    st_results = ''
     sw_link = extract_domain(link)
     products_images_link = construct_products_query(link)
     landing_page_image_link = extract_domain(link)
@@ -1556,7 +1555,7 @@ def scrape():
         store_info['paid_traffic_percentage'] = sw_results['searchesSource']['paidSearchShare']
     except:
         store_info['paid_traffic_percentage'] = "-"
-    return jsonify(st_results)
+    return jsonify(store_info)
 
 
     
