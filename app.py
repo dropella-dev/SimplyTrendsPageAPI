@@ -1078,32 +1078,33 @@ def thread_function(cookies_file, file_path_follow, file_path_like, file_path_co
 
 
 def CaptureLandingPageScreenshot(domain, queue):
-        options = webdriver.ChromeOptions()    
-        options.add_argument("--disable-renderer-backgrounding")
-        options.add_argument("--disable-backgrounding-occluded-windows")
-        options.add_argument("--headless")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--disk-cache-size=1")    
-        options.add_argument("--disable-gpu")   
-        options.add_argument("--prerender-from-omnibox=disabled")    
-        options.add_argument("--disable-software-rasterizer")
-        options.add_argument("--hide-scrollbars")
-        options.headless = True
-        windows_user_agent = (
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-        )
-        options.add_argument(f"--user-agent={windows_user_agent}")
-        options.add_argument("--window-size=1080x720")
-        browser = webdriver.Chrome(options=options)
+        # options = webdriver.ChromeOptions()    
+        # options.add_argument("--disable-renderer-backgrounding")
+        # options.add_argument("--disable-backgrounding-occluded-windows")
+        # options.add_argument("--headless")
+        # options.add_argument("--no-sandbox")
+        # options.add_argument("--disable-dev-shm-usage")
+        # options.add_argument("--disk-cache-size=1")    
+        # options.add_argument("--disable-gpu")   
+        # options.add_argument("--prerender-from-omnibox=disabled")    
+        # options.add_argument("--disable-software-rasterizer")
+        # options.add_argument("--hide-scrollbars")
+        # options.headless = True
+        # windows_user_agent = (
+        #     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        # "(KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+        # )
+        # options.add_argument(f"--user-agent={windows_user_agent}")
+        # options.add_argument("--window-size=1080x720")
+        # browser = webdriver.Chrome(options=options)
 
         try:
             url = 'https://'+domain
-            browser.get(url)
-            base64_image = browser.get_screenshot_as_base64()
-            browser.quit()
-            queue.put(base64_image)
+            # browser.get(url)
+            # base64_image = browser.get_screenshot_as_base64()
+            # browser.quit()
+            # queue.put(base64_image)
+            queue.put("")
             return
         except Exception as e:
             queue.put("")
@@ -1278,18 +1279,22 @@ def scrape():
     products_images_link = construct_products_query(link)
     landing_page_image_link = extract_domain(link)
     try:
-        sw_thread = threading.Thread(target=similar_web, args=(sw_link,sw_queue))
-        products_images_thread = threading.Thread(target=ScrapeProductsImages, args=(products_images_link,products_images_queue))
-        landing_page_image_thread = threading.Thread(target=CaptureLandingPageScreenshot, args=(landing_page_image_link,landing_page_image_queue))
-        scraper_thread = threading.Thread(target=scraper_function, args=(link, st_queue))
-        sw_thread.start()
-        sw_thread.join()
-        products_images_thread.start()
-        products_images_thread.join()
-        landing_page_image_thread.start()
-        landing_page_image_thread.join()
-        scraper_thread.start()
-        scraper_thread.join()
+        # sw_thread = threading.Thread(target=similar_web, args=(sw_link,sw_queue))
+        # products_images_thread = threading.Thread(target=ScrapeProductsImages, args=(products_images_link,products_images_queue))
+        # landing_page_image_thread = threading.Thread(target=CaptureLandingPageScreenshot, args=(landing_page_image_link,landing_page_image_queue))
+        # scraper_thread = threading.Thread(target=scraper_function, args=(link, st_queue))
+        # sw_thread.start()
+        # sw_thread.join()
+        # products_images_thread.start()
+        # products_images_thread.join()
+        # landing_page_image_thread.start()
+        # landing_page_image_thread.join()
+        # scraper_thread.start()
+        # scraper_thread.join()
+        similar_web(sw_link, sw_queue)
+        ScrapeProductsImages(products_images_link, products_images_queue)
+        CaptureLandingPageScreenshot(landing_page_image_link, landing_page_image_queue)
+        scraper_function(link, st_queue)
         try:
             sw_results = sw_queue.get(timeout=10)
         except:
