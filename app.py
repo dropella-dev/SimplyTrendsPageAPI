@@ -1291,9 +1291,9 @@ def scrape():
         # landing_page_image_thread.join()
         # scraper_thread.start()
         # scraper_thread.join()
-        similar_web(sw_link, sw_queue)
-        ScrapeProductsImages(products_images_link, products_images_queue)
-        CaptureLandingPageScreenshot(landing_page_image_link, landing_page_image_queue)
+        # similar_web(sw_link, sw_queue)
+        # ScrapeProductsImages(products_images_link, products_images_queue)
+        # CaptureLandingPageScreenshot(landing_page_image_link, landing_page_image_queue)
         scraper_function(link, st_queue)
         try:
             sw_results = sw_queue.get(timeout=10)
