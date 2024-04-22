@@ -4,6 +4,7 @@ import asyncio
 import aiohttp
 import urllib
 import datetime as datetime
+import psutil
 import urllib.parse as ul
 from webdriver_manager.chrome import ChromeDriverManager
 from uc import undetected_chromedriver as webdriver
@@ -1305,6 +1306,20 @@ def scrape():
    #     landing_page_image_thread.join()
    # except:
    #     pass
+   memory_info = psutil.virtual_memory()
+   total_memory = memory_info.total
+   available_memory = memory_info.available
+   memory_percent = memory_info.percent
+   used_memory = memory_info.used
+   free_memory = memory_info.free
+   print("Total Memory:", total_memory)
+   print("Available Memory:", available_memory)
+   print("Memory Percent:", memory_percent)
+   print("Used Memory:", used_memory)
+   print("Free Memory:", free_memory)
+
+
+   
    try:
        similar_web_result = similar_web(sw_link,sw_queue)
    except Exception as e:
