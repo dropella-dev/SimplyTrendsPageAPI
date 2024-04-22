@@ -1277,7 +1277,7 @@ def scrape():
       
    except Exception as e:
        return jsonify({'error': e})
-   
+   print(st_results)
    sw_queue = queue.Queue()
    products_images_queue = queue.Queue()
    landing_page_image_queue = queue.Queue()
