@@ -1279,9 +1279,31 @@ def scrape():
    except Exception as e:
        return jsonify({'error': e})
    print(st_results)
+   memory_info = psutil.virtual_memory()
+   total_memory = memory_info.total
+   available_memory = memory_info.available
+   memory_percent = memory_info.percent
+   used_memory = memory_info.used
+   free_memory = memory_info.free
+   print("Total Memory:", total_memory)
+   print("Available Memory:", available_memory)
+   print("Memory Percent:", memory_percent)
+   print("Used Memory:", used_memory)
+   print("Free Memory:", free_memory)
    sw_queue = queue.Queue()
    products_images_queue = queue.Queue()
    landing_page_image_queue = queue.Queue()
+   memory_info = psutil.virtual_memory()
+   total_memory = memory_info.total
+   available_memory = memory_info.available
+   memory_percent = memory_info.percent
+   used_memory = memory_info.used
+   free_memory = memory_info.free
+   print("Total Memory:", total_memory)
+   print("Available Memory:", available_memory)
+   print("Memory Percent:", memory_percent)
+   print("Used Memory:", used_memory)
+   print("Free Memory:", free_memory)
    sw_results = ''
    products_images_results = ''
    landing_page_image_results = ''
@@ -1306,19 +1328,6 @@ def scrape():
    #     landing_page_image_thread.join()
    # except:
    #     pass
-   memory_info = psutil.virtual_memory()
-   total_memory = memory_info.total
-   available_memory = memory_info.available
-   memory_percent = memory_info.percent
-   used_memory = memory_info.used
-   free_memory = memory_info.free
-   print("Total Memory:", total_memory)
-   print("Available Memory:", available_memory)
-   print("Memory Percent:", memory_percent)
-   print("Used Memory:", used_memory)
-   print("Free Memory:", free_memory)
-
-
    
    try:
        similar_web_result = similar_web(sw_link,sw_queue)
