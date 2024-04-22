@@ -1287,25 +1287,43 @@ def scrape():
    sw_link = extract_domain(link)
    products_images_link = construct_products_query(link)
    landing_page_image_link = extract_domain(link)
+   # try:
+   #     sw_thread = threading.Thread(target=similar_web, args=(sw_link,sw_queue))
+   #     sw_thread.start()
+   #     sw_thread.join()
+   # except:
+   #     pass
+   # try:
+   #     products_images_thread = threading.Thread(target=ScrapeProductsImages, args=(products_images_link,products_images_queue))
+   #     products_images_thread.start()
+   #     products_images_thread.join()
+   # except:
+   #     pass
+   # try:
+   #     landing_page_image_thread = threading.Thread(target=CaptureLandingPageScreenshot, args=(landing_page_image_link,landing_page_image_queue))
+   #     landing_page_image_thread.start()
+   #     landing_page_image_thread.join()
+   # except:
+   #     pass
    try:
-       sw_thread = threading.Thread(target=similar_web, args=(sw_link,sw_queue))
-       sw_thread.start()
-       sw_thread.join()
-   except:
-       pass
-   try:
-       products_images_thread = threading.Thread(target=ScrapeProductsImages, args=(products_images_link,products_images_queue))
-       products_images_thread.start()
-       products_images_thread.join()
-   except:
-       pass
-   try:
-       landing_page_image_thread = threading.Thread(target=CaptureLandingPageScreenshot, args=(landing_page_image_link,landing_page_image_queue))
-       landing_page_image_thread.start()
-       landing_page_image_thread.join()
-   except:
-       pass
+       similar_web_result = similar_web(sw_link,sw_queue)
+   except Exception as e:
+       print("Similar Web error:", e)
        
+
+# Product Images
+   try:
+       products_images_result = ScrapeProductsImages(products_images_link,products_images_queue)
+   except Exception as e:
+       print("Product Images error:", e)
+       
+# Landing Page Image
+   try:
+       landing_page_image_result = CaptureLandingPageScreenshot(landing_page_image_link,landing_page_image_queue)
+   except Exception as e:
+       print("Landing Page Image error:", e)
+       
+    
    try:
       sw_results = sw_queue.get(timeout=10)
    except:
