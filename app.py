@@ -1289,28 +1289,36 @@ def scrape():
    landing_page_image_link = extract_domain(link)
    try:
        sw_thread = threading.Thread(target=similar_web, args=(sw_link,sw_queue))
-       products_images_thread = threading.Thread(target=ScrapeProductsImages, args=(products_images_link,products_images_queue))
-       landing_page_image_thread = threading.Thread(target=CaptureLandingPageScreenshot, args=(landing_page_image_link,landing_page_image_queue))
        sw_thread.start()
-       products_images_thread.start()
-       landing_page_image_thread.start()
        sw_thread.join()
+   except:
+       pass
+   try:
+       products_images_thread = threading.Thread(target=ScrapeProductsImages, args=(products_images_link,products_images_queue))
+       products_images_thread.start()
        products_images_thread.join()
+   except:
+       pass
+   try:
+       landing_page_image_thread = threading.Thread(target=CaptureLandingPageScreenshot, args=(landing_page_image_link,landing_page_image_queue))
+       landing_page_image_thread.start()
        landing_page_image_thread.join()
-       try:
-           sw_results = sw_queue.get(timeout=10)
-       except:
-           pass
-       try:
-           products_images_results = products_images_queue.get(timeout=10)
-       except:
-           pass
-       try:
-           landing_page_image_results  = landing_page_image_queue.get(timeout=10)
-       except:
-           pass
-   except: 
-       return 'again'
+   except:
+       pass
+       
+   try:
+      sw_results = sw_queue.get(timeout=10)
+   except:
+      pass
+   try:
+      products_images_results = products_images_queue.get(timeout=10)
+   except:
+      pass
+   try:
+      landing_page_image_results  = landing_page_image_queue.get(timeout=10)
+   except:
+      pass
+
    store_info = {}
    try:
        store_info['product_images'] = products_images_results[:10]
