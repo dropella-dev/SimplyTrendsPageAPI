@@ -1361,245 +1361,245 @@
 # #    except:
 # #       pass
 
-   store_info = {}
-   try:
-       store_info['product_images'] = products_images_results[:10]
-   except:
-       store_info['product_images'] = []
-   def get_instagram(links):
-       for link in links:
-           if 'instagram' in link:
-               return link
-   try:
-       media_stats = asyncio.run(instagram_stats(get_instagram(st_results['socialmedia'])))
-   except:
-       pass
-   try:
-       store_info['store_name'] = sw_results['overview']['companyName']
-   except:
-       try:
-           store_info['store_name'] = st_results.companyName
-       except:
-           store_info['store_name'] = "-"
-   def chatgpt_prompt_1(store_name):
-       pass
+   # store_info = {}
    # try:
-   #     store_info['Store description'] = 
-   try:
-       store_info['store_link'] = "https://www."+sw_results['domain']
-   except:
-       try:
-           store_info['store_link'] = "https://www."+st_results['domain_name']
-       except:
-           store_info['store_link'] = "-"
-   def convert_number_to_approximate(number):
-       if isinstance(number, str):
-           number = int(number.replace(",", ""))
-       if number >= 1000000000:
-           return f"{number / 1000000000:.1f}B"
-       elif number >= 1000000:
-           return f"{number / 1000000:.1f}M"
-       elif number >= 1000:
-           return f"{number / 1000:.1f}K"
-       else:
-           return str(number)
-   try:
-       store_info['global_store_rank'] = convert_number_to_approximate(sw_results['overview']['globalRank'])
-   except:
-       try:
-           store_info['global_store_rank'] = convert_number_to_approximate(st_results['Global_rank'][0])
-       except:
-           store_info['global_store_rank'] = "-"
-   try:
-       store_info['country_rank'] = convert_number_to_approximate(sw_results['overview']['countryRank'])
-   except:
-       try:
-           store_info['country_rank'] = convert_number_to_approximate(st_results['countryrank'])
-       except:
-           store_info['country_rank'] = "-"
-   try:
-       store_info['pages_per_visit'] = "{:.4f}".format(sw_results['overview']['pagesPerVisit'])
-   except:
-       try:
-           store_info['pages_per_visit'] = "{:.4f}".format(st_results['pagespervisit'])
-       except:
-           store_info['pages_per_visit'] = "-"
-   try:
-       store_info['average_visit_stay'] = sw_results['traffic']['visitsAvgDurationFormatted']
-   except:
-       try:
-           store_info['average_visit_stay'] = st_results['avgvisitduration']
-       except:
-           store_info['average_visit_stay'] = "-"
-   try:
-       store_info['stores_country'] = st_results['country']
-   except:
-       store_info['stores_country'] = "-"
-   try:
-       store_info['store_creation_year'] = datetime.strptime(st_results['firstpublishproduct'], '%B %d, %Y').year
-   except:
-       store_info['store_creation_year'] = "-"
-   try:
-       store_info['total_visits'] = st_results['monthlyvisits']
-   except:
-       store_info['total_visits'] = "-"
-   try:
-       store_info['bounce_rate'] = st_results['bouncertate']
-   except:
-       store_info['bounce_rate'] = "-"
-   try:
-       store_info['category_rank'] = convert_number_to_approximate(sw_results['overview']['categoryRank'])
-   except:
-       try:
-           store_info['category_rank'] = convert_number_to_approximate(st_results['categoryyrank'])
-       except:
-           store_info['category_rank'] = "-"
-   def messy_data_formatting(data):
-       return data.replace("/", " > ").replace("_", " ")
-   try:
-       store_info['hierarchical_categories'] = messy_data_formatting(sw_results['outgoingReferrals']['topOutgoingCategories'][0]['category'])
-   except:
-       store_info['hierarchical_categories'] =  "-"
-   try:
-       store_info['landing_page_image'] = landing_page_image_results
-   except:
-       store_info['landing_page_image'] = "-"
-   try:
-       store_info['total_products'] = st_results['numproducts']
-   except:
-       store_info['total_products'] = "-"
-   try:
-       store_info['store_creation_date'] = st_results['firstpublishproduct']
-   except:
-       store_info['store_creation_date'] = "-"
-   try:
-       store_info['average_price'] = st_results['avgprices'].split("(")[0]
-   except:
-       store_info['average_price'] = "-"
-   try:
-       store_info['average_likes'] = media_stats['average_likes']
-   except:
-       store_info['average_likes'] = "-"
-   try:
-       store_info['total_followers'] = media_stats['followers']
-   except:
-       store_info['total_followers'] = "-"
-   try:
-       store_info['total_following'] = media_stats['following']
-   except:
-       store_info['total_following'] = "-"
-   try:
-       store_info['total_posts'] = media_stats['media_count']
-   except:
-       store_info['total_posts'] = "-"
-   try:
-       store_info['average_comments'] = media_stats['average_comments']
-   except:
-       store_info['average_comments'] = "-"
-   try:
-       store_info['total_traffic'] = convert_number_to_approximate(sw_results['traffic']['visitsTotalCount'])
-   except:
-       store_info['total_traffic'] = "-"
-   try:
-       store_info['engagement_stats'] = media_stats['engagement_rate']
-   except:
-       store_info['engagement_stats'] = "-"
-   def get_top_countries(stats):
-       return [country['Country_Name'] for country in stats]
-   try:
-       store_info['top_countries'] = get_top_countries(st_results['data_countryvisits'])
-   except:
-       store_info['top_countries'] = "-"
-   try:
-       store_info['male_gender_percentage'] =  next((item['male'] for item in st_results['data_malefepercent'] if 'male' in item), None)
-   except:
-       store_info['male_gender_percentage'] = "-"
-   try:
-       store_info['female_gender_percentage'] = next((item['female'] for item in st_results['data_malefepercent'] if 'female' in item), None)
-   except:
-       store_info['female_gender_percentage'] = "-"
-   def age_groups_distribution(data):
-       sorted_age_distribution = sorted(data['demographics']['ageDistribution'], key=lambda x: x['minAge'])
-       result = []
-       for age_group_data in sorted_age_distribution:
-           age_group = ''
-           if age_group_data['maxAge'] is not None:
-               age_group = str(age_group_data['minAge']) + " - " + str(age_group_data['maxAge'])
-           else:
-               age_group = str(age_group_data['minAge']) + "+"
+   #     store_info['product_images'] = products_images_results[:10]
+   # except:
+   #     store_info['product_images'] = []
+   # def get_instagram(links):
+   #     for link in links:
+   #         if 'instagram' in link:
+   #             return link
+   # try:
+   #     media_stats = asyncio.run(instagram_stats(get_instagram(st_results['socialmedia'])))
+   # except:
+   #     pass
+   # try:
+   #     store_info['store_name'] = sw_results['overview']['companyName']
+   # except:
+   #     try:
+   #         store_info['store_name'] = st_results.companyName
+   #     except:
+   #         store_info['store_name'] = "-"
+   # def chatgpt_prompt_1(store_name):
+   #     pass
+   # # try:
+   # #     store_info['Store description'] = 
+   # try:
+   #     store_info['store_link'] = "https://www."+sw_results['domain']
+   # except:
+   #     try:
+   #         store_info['store_link'] = "https://www."+st_results['domain_name']
+   #     except:
+   #         store_info['store_link'] = "-"
+   # def convert_number_to_approximate(number):
+   #     if isinstance(number, str):
+   #         number = int(number.replace(",", ""))
+   #     if number >= 1000000000:
+   #         return f"{number / 1000000000:.1f}B"
+   #     elif number >= 1000000:
+   #         return f"{number / 1000000:.1f}M"
+   #     elif number >= 1000:
+   #         return f"{number / 1000:.1f}K"
+   #     else:
+   #         return str(number)
+   # try:
+   #     store_info['global_store_rank'] = convert_number_to_approximate(sw_results['overview']['globalRank'])
+   # except:
+   #     try:
+   #         store_info['global_store_rank'] = convert_number_to_approximate(st_results['Global_rank'][0])
+   #     except:
+   #         store_info['global_store_rank'] = "-"
+   # try:
+   #     store_info['country_rank'] = convert_number_to_approximate(sw_results['overview']['countryRank'])
+   # except:
+   #     try:
+   #         store_info['country_rank'] = convert_number_to_approximate(st_results['countryrank'])
+   #     except:
+   #         store_info['country_rank'] = "-"
+   # try:
+   #     store_info['pages_per_visit'] = "{:.4f}".format(sw_results['overview']['pagesPerVisit'])
+   # except:
+   #     try:
+   #         store_info['pages_per_visit'] = "{:.4f}".format(st_results['pagespervisit'])
+   #     except:
+   #         store_info['pages_per_visit'] = "-"
+   # try:
+   #     store_info['average_visit_stay'] = sw_results['traffic']['visitsAvgDurationFormatted']
+   # except:
+   #     try:
+   #         store_info['average_visit_stay'] = st_results['avgvisitduration']
+   #     except:
+   #         store_info['average_visit_stay'] = "-"
+   # try:
+   #     store_info['stores_country'] = st_results['country']
+   # except:
+   #     store_info['stores_country'] = "-"
+   # try:
+   #     store_info['store_creation_year'] = datetime.strptime(st_results['firstpublishproduct'], '%B %d, %Y').year
+   # except:
+   #     store_info['store_creation_year'] = "-"
+   # try:
+   #     store_info['total_visits'] = st_results['monthlyvisits']
+   # except:
+   #     store_info['total_visits'] = "-"
+   # try:
+   #     store_info['bounce_rate'] = st_results['bouncertate']
+   # except:
+   #     store_info['bounce_rate'] = "-"
+   # try:
+   #     store_info['category_rank'] = convert_number_to_approximate(sw_results['overview']['categoryRank'])
+   # except:
+   #     try:
+   #         store_info['category_rank'] = convert_number_to_approximate(st_results['categoryyrank'])
+   #     except:
+   #         store_info['category_rank'] = "-"
+   # def messy_data_formatting(data):
+   #     return data.replace("/", " > ").replace("_", " ")
+   # try:
+   #     store_info['hierarchical_categories'] = messy_data_formatting(sw_results['outgoingReferrals']['topOutgoingCategories'][0]['category'])
+   # except:
+   #     store_info['hierarchical_categories'] =  "-"
+   # try:
+   #     store_info['landing_page_image'] = landing_page_image_results
+   # except:
+   #     store_info['landing_page_image'] = "-"
+   # try:
+   #     store_info['total_products'] = st_results['numproducts']
+   # except:
+   #     store_info['total_products'] = "-"
+   # try:
+   #     store_info['store_creation_date'] = st_results['firstpublishproduct']
+   # except:
+   #     store_info['store_creation_date'] = "-"
+   # try:
+   #     store_info['average_price'] = st_results['avgprices'].split("(")[0]
+   # except:
+   #     store_info['average_price'] = "-"
+   # try:
+   #     store_info['average_likes'] = media_stats['average_likes']
+   # except:
+   #     store_info['average_likes'] = "-"
+   # try:
+   #     store_info['total_followers'] = media_stats['followers']
+   # except:
+   #     store_info['total_followers'] = "-"
+   # try:
+   #     store_info['total_following'] = media_stats['following']
+   # except:
+   #     store_info['total_following'] = "-"
+   # try:
+   #     store_info['total_posts'] = media_stats['media_count']
+   # except:
+   #     store_info['total_posts'] = "-"
+   # try:
+   #     store_info['average_comments'] = media_stats['average_comments']
+   # except:
+   #     store_info['average_comments'] = "-"
+   # try:
+   #     store_info['total_traffic'] = convert_number_to_approximate(sw_results['traffic']['visitsTotalCount'])
+   # except:
+   #     store_info['total_traffic'] = "-"
+   # try:
+   #     store_info['engagement_stats'] = media_stats['engagement_rate']
+   # except:
+   #     store_info['engagement_stats'] = "-"
+   # def get_top_countries(stats):
+   #     return [country['Country_Name'] for country in stats]
+   # try:
+   #     store_info['top_countries'] = get_top_countries(st_results['data_countryvisits'])
+   # except:
+   #     store_info['top_countries'] = "-"
+   # try:
+   #     store_info['male_gender_percentage'] =  next((item['male'] for item in st_results['data_malefepercent'] if 'male' in item), None)
+   # except:
+   #     store_info['male_gender_percentage'] = "-"
+   # try:
+   #     store_info['female_gender_percentage'] = next((item['female'] for item in st_results['data_malefepercent'] if 'female' in item), None)
+   # except:
+   #     store_info['female_gender_percentage'] = "-"
+   # def age_groups_distribution(data):
+   #     sorted_age_distribution = sorted(data['demographics']['ageDistribution'], key=lambda x: x['minAge'])
+   #     result = []
+   #     for age_group_data in sorted_age_distribution:
+   #         age_group = ''
+   #         if age_group_data['maxAge'] is not None:
+   #             age_group = str(age_group_data['minAge']) + " - " + str(age_group_data['maxAge'])
+   #         else:
+   #             age_group = str(age_group_data['minAge']) + "+"
        
-           percentage_string = "{:.2f}".format(age_group_data['value'])
-           percentage = float(percentage_string) * 100
+   #         percentage_string = "{:.2f}".format(age_group_data['value'])
+   #         percentage = float(percentage_string) * 100
        
-           result.append({
-           'age_group_label': age_group,
-           'percentage_string': percentage_string,
-           'percentage': percentage
-       })
-       return result
+   #         result.append({
+   #         'age_group_label': age_group,
+   #         'percentage_string': percentage_string,
+   #         'percentage': percentage
+   #     })
+   #     return result
 
-   try:
-       store_info['age_groups_distribution'] = age_groups_distribution(sw_results)
-   except:
-       store_info['age_groups_distribution'] = "-"
-   try:
-       store_info['top_categories'] = sw_results['interests']['topInterestedCategories']
-   except:
-       try:
-           store_info['top_categories'] = st_results['Top_5_popular_categories']
-       except:
-           store_info['top_categories'] = "-"
-   try:
-       store_info['other_similar_stores'] = sw_results['competitors']['topSimilarityCompetitors']
-   except:
-       store_info['other_similar_stores'] = "-"
-   try:
-       store_info['other_topics'] = sw_results['interests']['topInterestedTopics']
-   except:
-       try:
-           store_info['other_topics'] = st_results['Top_5_hot_topic']
-       except:
-           store_info['other_topics'] = "-"
-   def process_social_networks(data):
+   # try:
+   #     store_info['age_groups_distribution'] = age_groups_distribution(sw_results)
+   # except:
+   #     store_info['age_groups_distribution'] = "-"
+   # try:
+   #     store_info['top_categories'] = sw_results['interests']['topInterestedCategories']
+   # except:
+   #     try:
+   #         store_info['top_categories'] = st_results['Top_5_popular_categories']
+   #     except:
+   #         store_info['top_categories'] = "-"
+   # try:
+   #     store_info['other_similar_stores'] = sw_results['competitors']['topSimilarityCompetitors']
+   # except:
+   #     store_info['other_similar_stores'] = "-"
+   # try:
+   #     store_info['other_topics'] = sw_results['interests']['topInterestedTopics']
+   # except:
+   #     try:
+   #         store_info['other_topics'] = st_results['Top_5_hot_topic']
+   #     except:
+   #         store_info['other_topics'] = "-"
+   # def process_social_networks(data):
 
-       top_social_networks = data['socialNetworksSource']['topSocialNetworks']
-       total_visits_count = data['traffic']['visitsTotalCount']
-       result = []
+   #     top_social_networks = data['socialNetworksSource']['topSocialNetworks']
+   #     total_visits_count = data['traffic']['visitsTotalCount']
+   #     result = []
 
-       for network in top_social_networks:
-           percentage_number = network['visitsShare'] * 100
-           percentage = float("{:.2f}".format(percentage_number))
-           value = convert_number_to_approximate(percentage_number * total_visits_count)
+   #     for network in top_social_networks:
+   #         percentage_number = network['visitsShare'] * 100
+   #         percentage = float("{:.2f}".format(percentage_number))
+   #         value = convert_number_to_approximate(percentage_number * total_visits_count)
 
-           result.append({
-           'name': network['name'],
-           'percentage': percentage,
-           'value': value,
-           'icon': network['icon']
-               })
+   #         result.append({
+   #         'name': network['name'],
+   #         'percentage': percentage,
+   #         'value': value,
+   #         'icon': network['icon']
+   #             })
 
-       return result
-   try:
-       store_info['marketing_channels_distribution'] = process_social_networks(sw_results)
-   except:
-       store_info['marketing_channels_distribution'] = "-"
-   try:
-       store_info['top_keywords'] = sw_results['searchesSource']['topKeywords']
-   except:
-       store_info['top_keywords'] = "-"
-   try:
-       store_info['keywords_count'] = sw_results['searchesSource']['keywordsTotalCount']
-   except:
-       store_info['keywords_count'] = "-"
-   try:
-       store_info['organic_traffic_percentage'] = sw_results['searchesSource']['organicSearchShare']
-   except:
-       store_info['organic_traffic_percentage'] = "-"
-   try:
-       store_info['paid_traffic_percentage'] = sw_results['searchesSource']['paidSearchShare']
-   except:
-       store_info['paid_traffic_percentage'] = "-"
-   return jsonify(store_info)
+   #     return result
+   # try:
+   #     store_info['marketing_channels_distribution'] = process_social_networks(sw_results)
+   # except:
+   #     store_info['marketing_channels_distribution'] = "-"
+   # try:
+   #     store_info['top_keywords'] = sw_results['searchesSource']['topKeywords']
+   # except:
+   #     store_info['top_keywords'] = "-"
+   # try:
+   #     store_info['keywords_count'] = sw_results['searchesSource']['keywordsTotalCount']
+   # except:
+   #     store_info['keywords_count'] = "-"
+   # try:
+   #     store_info['organic_traffic_percentage'] = sw_results['searchesSource']['organicSearchShare']
+   # except:
+   #     store_info['organic_traffic_percentage'] = "-"
+   # try:
+   #     store_info['paid_traffic_percentage'] = sw_results['searchesSource']['paidSearchShare']
+   # except:
+   #     store_info['paid_traffic_percentage'] = "-"
+   # return jsonify(store_info)
 
 
    
