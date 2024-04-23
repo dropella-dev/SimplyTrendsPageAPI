@@ -3971,9 +3971,9 @@ def thread_function(cookies_file, file_path_follow, file_path_like, file_path_co
 # Main execution
 
 
-@app.route('/scrape', methods=['POST'])
-def scrape():
-    link = request.json.get('link')
+#@app.route('/scrape', methods=['POST'])
+def scrape(link):
+    #link = request.json.get('link')
     result_queue = queue.Queue()
 
     # Start a new thread for each scraping request
@@ -3998,10 +3998,10 @@ def scrape():
 
     return jsonify(result)
 
-@app.route('/SimilarWeb', methods=['POST'])
-def SimilarWeb():
-    data = request.json
-    domain = data.get('domain')
+#@app.route('/SimilarWeb', methods=['POST'])
+def SimilarWeb(domain):
+    # data = request.json
+    # domain = data.get('domain')
     url = "https://similarweb12.p.rapidapi.com/v2/website-analytics/"
     querystring = {"domain": domain}
     headers = {
@@ -4020,10 +4020,10 @@ def SimilarWeb():
            except:
                pass
 
-@app.route('/ScrapeProductsImages', methods=['POST'])
-def ScrapeProductsImages():
-    data = request.json
-    search_term = data.get('search_term')
+#@app.route('/ScrapeProductsImages', methods=['POST'])
+def ScrapeProductsImages(search_term):
+    # data = request.json
+    # search_term = data.get('search_term')
     url = 'https://www.google.com/search?q={0}&tbm=isch'.format(search_term)
     try:
         content = httpx.get(url).content
@@ -4037,10 +4037,10 @@ def ScrapeProductsImages():
     return jsonify(products_urls)
 
 
-@app.route('/CaptureLandingPageScreenshot', methods=['POST'])
-def CaptureLandingPageScreenshot():
-    data = request.json
-    domain = data.get('domain')
+#@app.route('/CaptureLandingPageScreenshot', methods=['POST'])
+def CaptureLandingPageScreenshot(domain):
+    # data = request.json
+    # domain = data.get('domain')
     options = webdriver.ChromeOptions()    
     options.add_argument("--disable-renderer-backgrounding")
     options.add_argument("--disable-backgrounding-occluded-windows")
@@ -4213,13 +4213,17 @@ def InternalCR():
     headers = {
     "Content-Type": "application/json"
     }
-    st_results  = requests.post(f"{base_url}/scrape", headers=headers,json=st_payload)
+    #st_results  = requests.post(f"{base_url}/scrape", headers=headers,json=st_payload)
+    st_results  = scrape(link)
     print(st_results)
-    sw_results =  requests.post(f"{base_url}/SimilarWeb",headers=headers,json=sw_payload)
+    #sw_results =  requests.post(f"{base_url}/SimilarWeb",headers=headers,json=sw_payload)
+    sw_results =  SimilarWeb(extract_domain(link))
     print(sw_results)
-    products_images_results = requests.post(f"{base_url}/ScrapeProductsImages",headers=headers,json=scrape_images_payload)
+    #products_images_results = requests.post(f"{base_url}/ScrapeProductsImages",headers=headers,json=scrape_images_payload)
+    products_images_results = ScrapeProductImages(construct_products_query(link))
     print(products_images_results)
-    landing_page_image_results = requests.post(f"{base_url}/ScrapeProductsImages",headers=headers,json=landing_page_payload)
+    #landing_page_image_results = requests.post(f"{base_url}/ScrapeProductsImages",headers=headers,json=landing_page_payload)
+    landing_page_image_results =   ScrapeProductsImages(extract_domain(link))
     print(landing_page_image_results)
     
     return "OK"
