@@ -4218,7 +4218,7 @@ def InternalCR():
     #products_images_results = requests.post(f"{base_url}/ScrapeProductsImages",headers=headers,json=scrape_images_payload)
     products_images_results = ScrapeProductsImages(construct_products_query(link))
     #landing_page_image_results = requests.post(f"{base_url}/ScrapeProductsImages",headers=headers,json=landing_page_payload)
-    landing_page_image_results =   ScrapeProductsImages(extract_domain(link))
+    landing_page_image_results =   CaptureLandingPageScreenshot(extract_domain(link))
     store_info = {}
     try:
        store_info['product_images'] = products_images_results[:10]
