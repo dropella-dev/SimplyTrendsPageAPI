@@ -3988,15 +3988,15 @@ def scrape(link):
      except queue.Empty:
       # Handle the case where no result is produced within the timeout period
       print("Failed to get result from worker thread within timeout")
-      return jsonify({'error': 'Timeout waiting for result'}), 504   
+      return {'error': 'Timeout waiting for result'}, 504   
        
     except Exception as e:
         
         
        
-        return jsonify({'error': e})
+        return {'error': e}
 
-    return jsonify(result)
+    return result
 
 #@app.route('/SimilarWeb', methods=['POST'])
 def SimilarWeb(domain):
@@ -4032,7 +4032,7 @@ def ScrapeProductsImages(search_term):
     products_urls = []
     for image in images:
         products_urls.append(image.get('src'))
-    return jsonify(products_urls)
+    return products_urls
 
 
 #@app.route('/CaptureLandingPageScreenshot', methods=['POST'])
@@ -4065,9 +4065,9 @@ def CaptureLandingPageScreenshot(domain):
         browser.get(url)
         base64_image = browser.get_screenshot_as_base64()
         browser.quit()
-        return jsonify({'image_base64': base64_image})
+        return {'image_base64': base64_image}
     except Exception as e:
-        return jsonify({'image_base64': ''})
+        return {'image_base64': ''}
 
 @app.route("/ScrapeStoreStats", methods=['POST'])
 async def instagram_stats():
