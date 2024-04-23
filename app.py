@@ -4014,9 +4014,7 @@ def SimilarWeb(domain):
                response = requests.request("GET", url, headers=headers, params=querystring)
                if response.status_code == 200 and len(response.content)>1:
                    response = response.json()
-                   queue.put(response)
-                   return
-                   #return response
+                   return response
            except:
                pass
 
@@ -4226,9 +4224,9 @@ def InternalCR():
     landing_page_image_results =   ScrapeProductsImages(extract_domain(link))
     print(landing_page_image_results)
     
-    return "OK"
+    return [st_results,sw_results,products_images_results,landing_page_image_results]
     
     
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(debug=True)
