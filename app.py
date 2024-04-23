@@ -4220,7 +4220,7 @@ def InternalCR():
     sw_results =  SimilarWeb(extract_domain(link))
     print(sw_results)
     #products_images_results = requests.post(f"{base_url}/ScrapeProductsImages",headers=headers,json=scrape_images_payload)
-    products_images_results = ScrapeProductImages(construct_products_query(link))
+    products_images_results = ScrapeProductsImages(construct_products_query(link))
     print(products_images_results)
     #landing_page_image_results = requests.post(f"{base_url}/ScrapeProductsImages",headers=headers,json=landing_page_payload)
     landing_page_image_results =   ScrapeProductsImages(extract_domain(link))
