@@ -4069,10 +4069,10 @@ def CaptureLandingPageScreenshot(domain):
     except Exception as e:
         return {'image_base64': ''}
 
-@app.route("/ScrapeStoreStats", methods=['POST'])
-async def instagram_stats():
-    data = request.json
-    profile_link = data.get('profile_link')
+#@app.route("/ScrapeStoreStats", methods=['POST'])
+async def instagram_stats(profile_link):
+    # data = request.json
+    # profile_link = data.get('profile_link')
     headers = {
     "X-RapidAPI-Key": "f2c30434bbmsh8c1a4392731f17ep119b93jsn79863bf924bf",
     "X-RapidAPI-Host": "scrappygram.p.rapidapi.com"
@@ -4196,29 +4196,27 @@ def InternalCR():
     def construct_products_query(link):
        return link.replace("https://app.simplytrends.co/shopifystore/", "").replace(".com?page_tab=overview","").strip() + " products"
     link = request.json.get('link')
-    base_url = "http://localhost:5000"
-    st_payload = {
-    "link": link}
-    sw_payload = {
-        'domain': extract_domain(link)
-    }
-    scrape_images_payload = {
-      'search_term' : construct_products_query(link)
-    }
-    landing_page_payload = {
-        'domain': extract_domain(link)
-    }
-    headers = {
-    "Content-Type": "application/json"
-    }
-    #st_results  = requests.post(f"{base_url}/scrape", headers=headers,json=st_payload)
-    st_results  = scrape(link)
-    #sw_results =  requests.post(f"{base_url}/SimilarWeb",headers=headers,json=sw_payload)
-    sw_results =  SimilarWeb(extract_domain(link))
-    #products_images_results = requests.post(f"{base_url}/ScrapeProductsImages",headers=headers,json=scrape_images_payload)
-    products_images_results = ScrapeProductsImages(construct_products_query(link))
-    #landing_page_image_results = requests.post(f"{base_url}/ScrapeProductsImages",headers=headers,json=landing_page_payload)
-    landing_page_image_results =   CaptureLandingPageScreenshot(extract_domain(link))
+    # st_results  = scrape(link)
+    # sw_results =  SimilarWeb(extract_domain(link))
+    # products_images_results = ScrapeProductsImages(construct_products_query(link))
+    # landing_page_image_results = CaptureLandingPageScreenshot(extract_domain(link))
+    st_thread = threading.Thread(target=scrape, args=(link,))
+    sw_thread = threading.Thread(target=SimilarWeb, args=(extract_domain(link),))
+    pi_thread = threading.Thread(target=ScrapeProductsImages, args=(construct_products_query(link),))
+    lp_thread = threading.Thread(target=CaptureLandingPageScreenshot, args=(extract_domain(link),))
+
+    # Start all threads
+    st_thread.start()
+    sw_thread.start()
+    pi_thread.start()
+    lp_thread.start()
+
+    # Wait for all threads to finish
+    st_thread.join()
+    sw_thread.join()
+    pi_thread.join()
+    lp_thread.join()
+
     store_info = {}
     try:
        store_info['product_images'] = products_images_results[:10]
@@ -4228,6 +4226,7 @@ def InternalCR():
        for link in links:
            if 'instagram' in link:
                return link
+    
     try:
        media_stats = asyncio.run(instagram_stats(get_instagram(st_results['socialmedia'])))
     except:
