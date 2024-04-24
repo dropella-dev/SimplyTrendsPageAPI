@@ -4196,26 +4196,26 @@ def InternalCR():
     def construct_products_query(link):
        return link.replace("https://app.simplytrends.co/shopifystore/", "").replace(".com?page_tab=overview","").strip() + " products"
     link = request.json.get('link')
-    # st_results  = scrape(link)
-    # sw_results =  SimilarWeb(extract_domain(link))
-    # products_images_results = ScrapeProductsImages(construct_products_query(link))
-    # landing_page_image_results = CaptureLandingPageScreenshot(extract_domain(link))
-    st_thread = threading.Thread(target=scrape, args=(link,))
-    sw_thread = threading.Thread(target=SimilarWeb, args=(extract_domain(link),))
-    pi_thread = threading.Thread(target=ScrapeProductsImages, args=(construct_products_query(link),))
-    lp_thread = threading.Thread(target=CaptureLandingPageScreenshot, args=(extract_domain(link),))
+    st_results  = scrape(link)
+    sw_results =  SimilarWeb(extract_domain(link))
+    products_images_results = ScrapeProductsImages(construct_products_query(link))
+    landing_page_image_results = CaptureLandingPageScreenshot(extract_domain(link))
+    # st_thread = threading.Thread(target=scrape, args=(link,))
+    # sw_thread = threading.Thread(target=SimilarWeb, args=(extract_domain(link),))
+    # pi_thread = threading.Thread(target=ScrapeProductsImages, args=(construct_products_query(link),))
+    # lp_thread = threading.Thread(target=CaptureLandingPageScreenshot, args=(extract_domain(link),))
 
-    # Start all threads
-    st_thread.start()
-    sw_thread.start()
-    pi_thread.start()
-    lp_thread.start()
+    # # Start all threads
+    # st_thread.start()
+    # sw_thread.start()
+    # pi_thread.start()
+    # lp_thread.start()
 
-    # Wait for all threads to finish
-    st_thread.join()
-    sw_thread.join()
-    pi_thread.join()
-    lp_thread.join()
+    # # Wait for all threads to finish
+    # st_thread.join()
+    # sw_thread.join()
+    # pi_thread.join()
+    # lp_thread.join()
 
     store_info = {}
     try:
