@@ -4069,10 +4069,10 @@ def CaptureLandingPageScreenshot(domain):
     except Exception as e:
         return {'image_base64': ''}
 
-@app.route("/ScrapeStoreStats", methods=['POST'])
-async def instagram_stats():
-    data = request.json
-    profile_link = data.get('profile_link')
+#@app.route("/ScrapeStoreStats", methods=['POST'])
+async def instagram_stats(profile_link):
+    # data = request.json
+    # profile_link = data.get('profile_link')
     headers = {
     "X-RapidAPI-Key": "f2c30434bbmsh8c1a4392731f17ep119b93jsn79863bf924bf",
     "X-RapidAPI-Host": "scrappygram.p.rapidapi.com"
